@@ -1,5 +1,6 @@
 package com.example.demonreproductormusica;
 
+import android.content.ContentResolver;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -61,4 +62,9 @@ public class BiblotecaFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_bibloteca, container, false);
     }
+
+    public void getAllFilesAudio(View view){
+        
+    }
+
 }

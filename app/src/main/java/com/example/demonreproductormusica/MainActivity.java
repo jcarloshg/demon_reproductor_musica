@@ -3,9 +3,11 @@ package com.example.demonreproductormusica;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setSelectedItemId(R.id.nav_reproductor);
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_container, fragment_reproductor).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.nav_container, fragment_bibloteca).commit();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -33,9 +35,10 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_bibloteca:
                         getSupportFragmentManager().beginTransaction().replace(R.id.nav_container, fragment_bibloteca).commit();
-                        // Navigation.findNavController(view).navigate(R.id.fragment_bibloteca);
+                        //Navigation.findNavController(view).navigate(R.id.fragment_bibloteca);
                         break;
                     case R.id.nav_reproductor:
+                        // Navigation.findNavController(view).navigate(R.id.fragment_reproductor);
                         getSupportFragmentManager().beginTransaction().replace(R.id.nav_container, fragment_reproductor).commit();
                         break;
                 }
@@ -44,4 +47,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 }
