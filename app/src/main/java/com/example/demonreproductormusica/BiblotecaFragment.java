@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -15,6 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.demonreproductormusica.adaptadores.ListItemAdapter;
+import com.example.demonreproductormusica.entidades.ListItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +39,14 @@ public class BiblotecaFragment extends Fragment {
     ArrayList <String> arrayList;
     Uri uri;
 
+
+    // pruebas
     Button btn_getmusic;
+
+
+    // elements of view Library
+    RecyclerView recyclerViewItems;
+    ArrayList<ListItem> arrayList_item;
 
     public void setContext(Context context){
         this.context = context;
@@ -78,7 +90,6 @@ public class BiblotecaFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
@@ -99,9 +110,20 @@ public class BiblotecaFragment extends Fragment {
             }
         });
 
+        // iniciañizate recyclerViewItems
+        recyclerViewItems = view.findViewById(R.id.recycler_view);
+        recyclerViewItems.setLayoutManager(new LinearLayoutManager(null));
+        arrayList_item = new ArrayList<>();
+
+        ListItemAdapter listItemAdapter = new ListItemAdapter(createList(3));
+        recyclerViewItems.setAdapter(listItemAdapter);
+
         return view;
     }
 
+
+    // ========================================================
+    // metodos de prueba
     public void getAllFilesMp3(View view){
         contentResolver = context.getContentResolver();
         uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -123,6 +145,16 @@ public class BiblotecaFragment extends Fragment {
         for (String item: arrayList) {
             Log.e("[PRUEBLA]", item);
         }
+    }
+
+    public ArrayList<ListItem> createList(int num_items){
+        ArrayList<ListItem> items = new ArrayList<>();
+
+        for (int i = 0; i < num_items; i++){
+            items.add( new ListItem(i, Integer.toString(i), Integer.toString(i)));
+        }
+
+        return items;
     }
 
 }
