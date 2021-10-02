@@ -1,13 +1,23 @@
 package com.example.demonreproductormusica;
 
 import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +25,20 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class BiblotecaFragment extends Fragment {
+
+    // permmission to get files audio at device
+    ContentResolver contentResolver;
+    Cursor cursor;
+    Context context;
+    String [] myStringArray = new String[] {};
+    ArrayList <String> arrayList;
+    Uri uri;
+
+    Button btn_getmusic;
+
+    public void setContext(Context context){
+        this.context = context;
+    }
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,17 +78,51 @@ public class BiblotecaFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bibloteca, container, false);
+        final View view = inflater.inflate(R.layout.fragment_bibloteca, container, false);
+
+        // permissions
+        arrayList = new ArrayList<>(Arrays.asList(myStringArray));
+
+        //listener on clicks
+        btn_getmusic = view.findViewById(R.id.btn_prueba);
+        btn_getmusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getAllFilesMp3(v);
+            }
+        });
+
+        return view;
     }
 
-    public void getAllFilesAudio(View view){
-        
+    public void getAllFilesMp3(View view){
+        contentResolver = context.getContentResolver();
+        uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+        cursor = contentResolver.query(uri, null, null, null, null);
+
+        if (cursor == null){
+            Toast.makeText( null, "algo salio mal :(", Toast.LENGTH_SHORT).show();
+        }else if(!cursor.moveToFirst()) {
+            Toast.makeText( null, "no hay musica", Toast.LENGTH_SHORT).show();
+        } else {
+            int title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            do {
+                String name = cursor.getString(title);
+                arrayList.add(name);
+            }while (cursor.moveToNext());
+        }
+
+        for (String item: arrayList) {
+            Log.e("[PRUEBLA]", item);
+        }
     }
 
 }
