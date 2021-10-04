@@ -11,10 +11,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.example.demonreproductormusica.db.DB;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
@@ -64,12 +68,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        //Create DB
+        /*
+        DB db = new DB(this);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+        if (sqLiteDatabase != null)
+            Toast.makeText(this, "DB created", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(this, "DB not created", Toast.LENGTH_LONG).show();
+
+        */
+
     }
 
     private void getPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     AlertDialog.Builder alertb = new AlertDialog.Builder(MainActivity.this);
                     alertb.setTitle("Por favor consede los permisos");
                     alertb.setMessage("Permisos para el acceso a los archivos");
@@ -85,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     alertb.setNegativeButton("Cancelar", null);
                     AlertDialog alertDialog = alertb.create();
                     alertDialog.show();
-                }else {
+                } else {
                     ActivityCompat.requestPermissions(
                             MainActivity.this,
                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -101,9 +117,10 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode){
-            case PERMIT:{
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED);
+        switch (requestCode) {
+            case PERMIT: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    ;
             }
         }
 

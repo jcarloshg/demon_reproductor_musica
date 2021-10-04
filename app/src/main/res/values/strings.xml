@@ -5,4 +5,9 @@
     <string name="button_create_list">Crear lista nueva</string>
     <string name="title_name_list">Nombre de la Playlist</string>
     <string name="create">Crear</string>
+
+    <!-- MSG data bases -->
+    <string name="db_msg_insert_correct">Nueva playlist creada</string>
+
+
 </resources>

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.demonreproductormusica.adaptadores.ListItemAdapter;
+import com.example.demonreproductormusica.db.DBPlaylist;
 import com.example.demonreproductormusica.entidades.ListItem;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -37,8 +39,8 @@ public class BiblotecaFragment extends Fragment {
     ContentResolver contentResolver;
     Cursor cursor;
     Context context;
-    String [] myStringArray = new String[] {};
-    ArrayList <String> arrayList;
+    String[] myStringArray = new String[]{};
+    ArrayList<String> arrayList;
     Uri uri;
 
     Button btn_create_list;
@@ -54,8 +56,8 @@ public class BiblotecaFragment extends Fragment {
 
     /**
      * this method is to set the contex to create ReciclyViewlist
-     * */
-    public void setContext(Context context){
+     */
+    public void setContext(Context context) {
         this.context = context;
     }
 
@@ -121,7 +123,7 @@ public class BiblotecaFragment extends Fragment {
         btn_create_list = view.findViewById(R.id.button_crate_list);
         btn_create_list.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
                 bottomSheetDialog.setContentView(R.layout.bottom_sheet_crate_list);
                 bottomSheetDialog.setCanceledOnTouchOutside(true);
@@ -132,14 +134,22 @@ public class BiblotecaFragment extends Fragment {
                 button_submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(v.getContext(), editText_name.getText(), Toast.LENGTH_LONG).show();
+
+                        String new_playlist_name = editText_name.getText().toString();
+
+                        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
+                        long id_new_playlist = dbPlaylist.insert_name_playlist(new_playlist_name.toString());
+                        if (id_new_playlist != -1)
+                            Toast.makeText(view.getContext(), "Playlist " + new_playlist_name + " creada!", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(view.getContext(), "Err al crear Playlist", Toast.LENGTH_LONG).show();
+
                     }
                 });
 
                 bottomSheetDialog.show();
             }
         });
-
 
 
         // iniciañizate recyclerViewItems
@@ -156,34 +166,34 @@ public class BiblotecaFragment extends Fragment {
 
     // ========================================================
     // metodos de prueba
-    public void getAllFilesMp3(View view){
+    public void getAllFilesMp3(View view) {
         contentResolver = context.getContentResolver();
         uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
         cursor = contentResolver.query(uri, null, null, null, null);
 
-        if (cursor == null){
-            Toast.makeText( null, "algo salio mal :(", Toast.LENGTH_SHORT).show();
-        }else if(!cursor.moveToFirst()) {
-            Toast.makeText( null, "no hay musica", Toast.LENGTH_SHORT).show();
+        if (cursor == null) {
+            Toast.makeText(null, "algo salio mal :(", Toast.LENGTH_SHORT).show();
+        } else if (!cursor.moveToFirst()) {
+            Toast.makeText(null, "no hay musica", Toast.LENGTH_SHORT).show();
         } else {
             int title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             do {
                 String name = cursor.getString(title);
                 arrayList.add(name);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
-        for (String item: arrayList) {
+        for (String item : arrayList) {
             Log.e("[PRUEBLA]", item);
         }
     }
 
-    public ArrayList<ListItem> createList(int num_items){
+    public ArrayList<ListItem> createList(int num_items) {
         ArrayList<ListItem> items = new ArrayList<>();
 
-        for (int i = 0; i < num_items; i++){
-            items.add( new ListItem(i, Integer.toString(i), Integer.toString(i)));
+        for (int i = 0; i < num_items; i++) {
+            items.add(new ListItem(i, Integer.toString(i), Integer.toString(i)));
         }
 
         return items;
