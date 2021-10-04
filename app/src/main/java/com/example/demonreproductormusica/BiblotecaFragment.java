@@ -16,10 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.demonreproductormusica.adaptadores.ListItemAdapter;
 import com.example.demonreproductormusica.entidades.ListItem;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +41,8 @@ public class BiblotecaFragment extends Fragment {
     ArrayList <String> arrayList;
     Uri uri;
 
+    Button btn_create_list;
+
 
     // pruebas
     Button btn_getmusic;
@@ -48,6 +52,9 @@ public class BiblotecaFragment extends Fragment {
     RecyclerView recyclerViewItems;
     ArrayList<ListItem> arrayList_item;
 
+    /**
+     * this method is to set the contex to create ReciclyViewlist
+     * */
     public void setContext(Context context){
         this.context = context;
     }
@@ -109,6 +116,31 @@ public class BiblotecaFragment extends Fragment {
                 getAllFilesMp3(v);
             }
         });
+
+        // create new list
+        btn_create_list = view.findViewById(R.id.button_crate_list);
+        btn_create_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
+                bottomSheetDialog.setContentView(R.layout.bottom_sheet_crate_list);
+                bottomSheetDialog.setCanceledOnTouchOutside(true);
+
+                final EditText editText_name = bottomSheetDialog.findViewById(R.id.editText_name);
+                Button button_submit = bottomSheetDialog.findViewById(R.id.button_submit);
+
+                button_submit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(v.getContext(), editText_name.getText(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                bottomSheetDialog.show();
+            }
+        });
+
+
 
         // iniciañizate recyclerViewItems
         recyclerViewItems = view.findViewById(R.id.recycler_view);
