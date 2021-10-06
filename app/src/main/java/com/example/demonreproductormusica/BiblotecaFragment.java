@@ -156,9 +156,9 @@ public class BiblotecaFragment extends Fragment {
         // iniciañizate recyclerViewItems
         recyclerViewItems = view.findViewById(R.id.recycler_view);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(null));
-        arrayList_item = new ArrayList<>();
 
-        ListItemAdapter listItemAdapter = new ListItemAdapter(createList(20));
+        arrayList_item = new DBPlaylist(view.getContext()).get_all_laylist();
+        ListItemAdapter listItemAdapter = new ListItemAdapter(arrayList_item);
         recyclerViewItems.setAdapter(listItemAdapter);
 
         return view;

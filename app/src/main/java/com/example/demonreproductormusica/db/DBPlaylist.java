@@ -44,14 +44,14 @@ public class DBPlaylist extends DB {
         ArrayList<ListItem> list = new ArrayList<>();
         Cursor cursor = null;
 
-        cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_PLAYLIST, null);
+        cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + DB.TABLE_PLAYLIST, null);
 
         if (cursor.moveToFirst()){
             do {
                 ListItem listItem = new ListItem();
                 listItem.setId(cursor.getInt(0));
                 listItem.setTitle(cursor.getString(1));
-                listItem.setSubtitle(cursor.getString(2));
+                listItem.setSubtitle(null);
                 list.add(listItem);
             }while (cursor.moveToNext());
         }
