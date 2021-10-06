@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.example.demonreproductormusica.adaptadores.ListItemAdapter;
 import com.example.demonreproductormusica.db.DBPlaylist;
 import com.example.demonreproductormusica.entidades.ListItem;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -62,6 +64,7 @@ public class BiblotecaFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_bibloteca, container, false);
 
         // permissions
+        context = view.getContext();
         arrayList = new ArrayList<>(Arrays.asList(myStringArray));
 
         //listener on clicks
@@ -94,10 +97,13 @@ public class BiblotecaFragment extends Fragment {
                         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
                         long id_new_playlist = dbPlaylist.insert_name_playlist(new_playlist_name);
 
-                        if (id_new_playlist != -1)
+                        if (id_new_playlist != -1){
                             Toast.makeText(view.getContext(), "PlaylistFragment " + new_playlist_name + " creada!", Toast.LENGTH_LONG).show();
+                        }
                         else
                             Toast.makeText(view.getContext(), "Err al crear PlaylistFragment", Toast.LENGTH_LONG).show();
+
+                        bottomSheetDialog.dismiss();
                     }
                 });
 
@@ -146,9 +152,8 @@ public class BiblotecaFragment extends Fragment {
     public ArrayList<ListItem> createList(int num_items) {
         ArrayList<ListItem> items = new ArrayList<>();
 
-        for (int i = 0; i < num_items; i++) {
+        for (int i = 0; i < num_items; i++)
             items.add(new ListItem(i, Integer.toString(i), Integer.toString(i)));
-        }
 
         return items;
     }

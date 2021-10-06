@@ -11,4 +11,7 @@
     <color name="rojo">#bf2e21</color>
 
     <color name="white">#ffffff</color>
+
+    <color name="background">#424242</color>
+
 </resources>

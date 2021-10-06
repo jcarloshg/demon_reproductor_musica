@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         // navigation
         fragment_reproductor = new ReproductorFragment();
         fragment_bibloteca = new BiblotecaFragment();
-        ((BiblotecaFragment) fragment_bibloteca).setContext(context);
 
         bottomNavigationView = findViewById(R.id.nav_view);
 
