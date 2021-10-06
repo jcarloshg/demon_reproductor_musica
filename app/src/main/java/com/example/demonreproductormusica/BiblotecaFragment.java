@@ -138,7 +138,8 @@ public class BiblotecaFragment extends Fragment {
                         String new_playlist_name = editText_name.getText().toString();
 
                         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
-                        long id_new_playlist = dbPlaylist.insert_name_playlist(new_playlist_name.toString());
+                        long id_new_playlist = dbPlaylist.insert_name_playlist(new_playlist_name);
+
                         if (id_new_playlist != -1)
                             Toast.makeText(view.getContext(), "Playlist " + new_playlist_name + " creada!", Toast.LENGTH_LONG).show();
                         else

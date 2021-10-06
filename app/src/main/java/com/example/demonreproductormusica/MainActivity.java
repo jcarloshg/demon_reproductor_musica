@@ -70,16 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Create DB
-        /*
         DB db = new DB(this);
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         if (sqLiteDatabase != null)
             Toast.makeText(this, "DB created", Toast.LENGTH_LONG).show();
         else
             Toast.makeText(this, "DB not created", Toast.LENGTH_LONG).show();
-
-        */
-
     }
 
     private void getPermission() {

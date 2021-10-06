@@ -2,11 +2,11 @@ package com.example.demonreproductormusica.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-
 import com.example.demonreproductormusica.entidades.ListItem;
 
 import java.util.ArrayList;
@@ -27,9 +27,9 @@ public class DBPlaylist extends DB {
             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put("name", name);
+            contentValues.put(DB.PLAYLIST_COLUMN_NAME, name);
 
-            id_playlist = sqLiteDatabase.insert(this.TABLE_PLAYLIST, null, contentValues);
+            id_playlist = sqLiteDatabase.insert(DB.TABLE_PLAYLIST, null, contentValues);
         } catch (Exception ex) {
             Log.e("[ERROR_DB]", ex.toString());
         }
@@ -41,6 +41,22 @@ public class DBPlaylist extends DB {
         DB db = new DB(this.context);
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
 
+        ArrayList<ListItem> list = new ArrayList<>();
+        Cursor cursor = null;
+
+        cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_PLAYLIST, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                ListItem listItem = new ListItem();
+                listItem.setId(cursor.getInt(0));
+                listItem.setTitle(cursor.getString(1));
+                listItem.setSubtitle(cursor.getString(2));
+                list.add(listItem);
+            }while (cursor.moveToNext());
+        }
+
+        return list;
     }
 
 }

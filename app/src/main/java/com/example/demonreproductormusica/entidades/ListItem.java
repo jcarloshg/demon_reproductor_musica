@@ -12,6 +12,9 @@ public class ListItem {
         this.subtitle = _subtitle;
     }
 
+    public ListItem() {
+    }
+
     public int getId() {
         return id;
     }
