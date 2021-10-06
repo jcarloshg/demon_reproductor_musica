@@ -43,63 +43,17 @@ public class BiblotecaFragment extends Fragment {
     ArrayList<String> arrayList;
     Uri uri;
 
-    Button btn_create_list;
 
+    Button btn_create_list;
+    BottomSheetDialog bottomSheetDialog;
+    EditText editText_name;
 
     // pruebas
     Button btn_getmusic;
 
-
     // elements of view Library
     RecyclerView recyclerViewItems;
     ArrayList<ListItem> arrayList_item;
-
-    /**
-     * this method is to set the contex to create ReciclyViewlist
-     */
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public BiblotecaFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BiblotecaFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static BiblotecaFragment newInstance(String param1, String param2) {
-        BiblotecaFragment fragment = new BiblotecaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,32 +73,31 @@ public class BiblotecaFragment extends Fragment {
             }
         });
 
+        // ===================================================================================
         // create new list
         btn_create_list = view.findViewById(R.id.button_crate_list);
         btn_create_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
+                bottomSheetDialog = new BottomSheetDialog(view.getContext());
                 bottomSheetDialog.setContentView(R.layout.bottom_sheet_crate_list);
                 bottomSheetDialog.setCanceledOnTouchOutside(true);
 
-                final EditText editText_name = bottomSheetDialog.findViewById(R.id.editText_name);
+                editText_name = bottomSheetDialog.findViewById(R.id.editText_name);
                 Button button_submit = bottomSheetDialog.findViewById(R.id.button_submit);
 
                 button_submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         String new_playlist_name = editText_name.getText().toString();
 
                         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
                         long id_new_playlist = dbPlaylist.insert_name_playlist(new_playlist_name);
 
                         if (id_new_playlist != -1)
-                            Toast.makeText(view.getContext(), "Playlist " + new_playlist_name + " creada!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(view.getContext(), "PlaylistFragment " + new_playlist_name + " creada!", Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(view.getContext(), "Err al crear Playlist", Toast.LENGTH_LONG).show();
-
+                            Toast.makeText(view.getContext(), "Err al crear PlaylistFragment", Toast.LENGTH_LONG).show();
                     }
                 });
 

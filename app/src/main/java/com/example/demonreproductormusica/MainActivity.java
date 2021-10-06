@@ -5,7 +5,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
 import android.content.Context;
@@ -46,27 +49,33 @@ public class MainActivity extends AppCompatActivity {
         fragment_bibloteca = new BiblotecaFragment();
         ((BiblotecaFragment) fragment_bibloteca).setContext(context);
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.nav_view);
 
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_reproductor, R.id.nav_bibloteca, R.id.nav_configuration)
+                .build();
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+        // add this line to see fragment name in ActionBar
+        // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
         bottomNavigationView.setSelectedItemId(R.id.nav_reproductor);
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_container, fragment_bibloteca).commit();
 
+        /*
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_bibloteca:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_container, fragment_bibloteca).commit();
-                        //Navigation.findNavController(view).navigate(R.id.fragment_bibloteca);
                         break;
                     case R.id.nav_reproductor:
-                        // Navigation.findNavController(view).navigate(R.id.fragment_reproductor);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_container, fragment_reproductor).commit();
                         break;
                 }
                 return true;
             }
         });
+         */
 
 
         //Create DB

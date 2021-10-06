@@ -9,4 +9,8 @@
         android:id="@+id/nav_bibloteca"
         android:icon="@drawable/ic_bibloteca"
         android:title="Bibloteca" />
+    <item
+        android:id="@+id/nav_configuration"
+        android:icon="@drawable/ic_build"
+        android:title="Configuraciones" />
 </menu>

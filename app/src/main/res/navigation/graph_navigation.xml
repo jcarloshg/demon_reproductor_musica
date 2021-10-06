@@ -3,28 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/graph_navigation"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/playlistFragment">
 
     <fragment
-        android:id="@+id/biblotecaFragment"
+        android:id="@+id/nav_bibloteca"
         android:name="com.example.demonreproductormusica.BiblotecaFragment"
         android:label="fragment_bibloteca"
         tools:layout="@layout/fragment_bibloteca" />
     <fragment
-        android:id="@+id/reproductorFragment"
+        android:id="@+id/nav_reproductor"
         android:name="com.example.demonreproductormusica.ReproductorFragment"
         android:label="fragment_reproductor"
         tools:layout="@layout/fragment_reproductor" />
     <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.demonreproductormusica.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
-        <action
-            android:id="@+id/action_mainFragment_to_biblotecaFragment"
-            app:destination="@id/biblotecaFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_reproductorFragment"
-            app:destination="@id/reproductorFragment" />
-    </fragment>
+        android:id="@+id/playlistFragment"
+        android:name="com.example.demonreproductormusica.PlaylistFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist" />
+    <fragment
+        android:id="@+id/nav_configuration"
+        android:name="com.example.demonreproductormusica.ConfiguracionFragment"
+        android:label="fragment_configuracion"
+        tools:layout="@layout/fragment_configuracion" />
 </navigation>
