@@ -68,34 +68,24 @@ public class BiblotecaFragment extends Fragment {
         context = view.getContext();
         arrayList = new ArrayList<>(Arrays.asList(myStringArray));
 
-        // iniciañizate recyclerViewItems
+        // ===================================================================================
+        // initialize recyclerViewItems
         recyclerViewItems = view.findViewById(R.id.recycler_view);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(null));
+        this.get_all_items(view); // llenamos la list
 
-        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
-        arrayList_item = dbPlaylist.get_all_laylist(); // aqui traemos la todas las listas :)
-
-        ListItemAdapter listItemAdapter = new ListItemAdapter(arrayList_item);
-        recyclerViewItems.setAdapter(listItemAdapter);
-
-
-        /// ===============================
-        // SEARCH
+        // ===================================================================================
+        // create searchView and listener searchView
         searchView = view.findViewById(R.id.search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-
-                DBPlaylist dbPlaylist = new DBPlaylist(view.getContext()); //creamos el objeto de la consulta
-                ArrayList<ListItem> arrayList =  dbPlaylist.get_playlist_for_name(s); // ejecutamos query y btenemos resultado
-                recyclerViewItems.setAdapter(new ListItemAdapter(arrayList)); // ponemos el resultado en el componete lista
-                return false;
+                return search_playlists(view, s);
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                Log.d("[onQueryTextChange]", s);
-                return false;
+                return search_playlists(view, s);
             }
         });
 
@@ -105,32 +95,7 @@ public class BiblotecaFragment extends Fragment {
         btn_create_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetDialog = new BottomSheetDialog(view.getContext());
-                bottomSheetDialog.setContentView(R.layout.bottom_sheet_crate_list);
-                bottomSheetDialog.setCanceledOnTouchOutside(true);
-
-                editText_name = bottomSheetDialog.findViewById(R.id.editText_name);
-                Button button_submit = bottomSheetDialog.findViewById(R.id.button_submit);
-
-                button_submit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String new_playlist_name = editText_name.getText().toString();
-
-                        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
-                        long id_new_playlist = dbPlaylist.insert_name_playlist(new_playlist_name);
-
-                        if (id_new_playlist != -1){
-                            Toast.makeText(view.getContext(), "PlaylistFragment " + new_playlist_name + " creada!", Toast.LENGTH_LONG).show();
-                        }
-                        else
-                            Toast.makeText(view.getContext(), "Err al crear PlaylistFragment", Toast.LENGTH_LONG).show();
-
-                        bottomSheetDialog.dismiss();
-                    }
-                });
-
-                bottomSheetDialog.show();
+                show_bottom_sheet_create_list(v);
             }
         });
 
@@ -146,6 +111,51 @@ public class BiblotecaFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private boolean search_playlists(View view, String s){
+        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext()); //creamos el objeto de la consulta
+        ArrayList<ListItem> arrayList =  dbPlaylist.get_playlist_for_name(s); // ejecutamos query y btenemos resultado
+        recyclerViewItems.setAdapter(new ListItemAdapter(arrayList)); // ponemos el resultado en el componete lista
+
+        if (s.equals("")) get_all_items(view);
+        return  false;
+    }
+
+    private void get_all_items(View view){
+        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
+        arrayList_item = dbPlaylist.get_all_laylist();
+        ListItemAdapter listItemAdapter = new ListItemAdapter(arrayList_item);
+        recyclerViewItems.setAdapter(listItemAdapter);
+    }
+
+    private void show_bottom_sheet_create_list(View view){
+        bottomSheetDialog = new BottomSheetDialog(view.getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_crate_list);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+
+        editText_name = bottomSheetDialog.findViewById(R.id.editText_name);
+        Button button_submit = bottomSheetDialog.findViewById(R.id.button_submit);
+
+        button_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String new_playlist_name = editText_name.getText().toString();
+
+                DBPlaylist dbPlaylist = new DBPlaylist(v.getContext());
+                long id_new_playlist = dbPlaylist.insert_name_playlist(new_playlist_name);
+
+                if (id_new_playlist != -1){
+                    Toast.makeText(v.getContext(), "Playlist " + new_playlist_name + " creada!", Toast.LENGTH_LONG).show();
+                }
+                else
+                    Toast.makeText(v.getContext(), "Err al crear Playlist", Toast.LENGTH_LONG).show();
+
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        bottomSheetDialog.show();
     }
 
 
