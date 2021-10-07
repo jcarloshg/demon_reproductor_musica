@@ -39,7 +39,7 @@ public class DB extends SQLiteOpenHelper {
     public DB(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.DATABASE_PATH = "/data/data/" + context.getPackageName() + "/databases/";
-        Log.e("[DATA_BASE]", "path: " + DATABASE_PATH);
+        Log.d("[DATA_BASE]", "path: " + DATABASE_PATH);
     }
 
     @Override

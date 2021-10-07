@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.demonreproductormusica.adaptadores.ListItemAdapter;
@@ -45,10 +46,10 @@ public class BiblotecaFragment extends Fragment {
     ArrayList<String> arrayList;
     Uri uri;
 
-
     Button btn_create_list;
     BottomSheetDialog bottomSheetDialog;
     EditText editText_name;
+    SearchView searchView;
 
     // pruebas
     Button btn_getmusic;
@@ -67,12 +68,34 @@ public class BiblotecaFragment extends Fragment {
         context = view.getContext();
         arrayList = new ArrayList<>(Arrays.asList(myStringArray));
 
-        //listener on clicks
-        btn_getmusic = view.findViewById(R.id.btn_prueba);
-        btn_getmusic.setOnClickListener(new View.OnClickListener() {
+        // iniciañizate recyclerViewItems
+        recyclerViewItems = view.findViewById(R.id.recycler_view);
+        recyclerViewItems.setLayoutManager(new LinearLayoutManager(null));
+
+        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
+        arrayList_item = dbPlaylist.get_all_laylist(); // aqui traemos la todas las listas :)
+
+        ListItemAdapter listItemAdapter = new ListItemAdapter(arrayList_item);
+        recyclerViewItems.setAdapter(listItemAdapter);
+
+
+        /// ===============================
+        // SEARCH
+        searchView = view.findViewById(R.id.search);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
-                getAllFilesMp3(v);
+            public boolean onQueryTextSubmit(String s) {
+
+                DBPlaylist dbPlaylist = new DBPlaylist(view.getContext()); //creamos el objeto de la consulta
+                ArrayList<ListItem> arrayList =  dbPlaylist.get_playlist_for_name(s); // ejecutamos query y btenemos resultado
+                recyclerViewItems.setAdapter(new ListItemAdapter(arrayList)); // ponemos el resultado en el componete lista
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Log.d("[onQueryTextChange]", s);
+                return false;
             }
         });
 
@@ -112,13 +135,15 @@ public class BiblotecaFragment extends Fragment {
         });
 
 
-        // iniciañizate recyclerViewItems
-        recyclerViewItems = view.findViewById(R.id.recycler_view);
-        recyclerViewItems.setLayoutManager(new LinearLayoutManager(null));
-
-        arrayList_item = new DBPlaylist(view.getContext()).get_all_laylist();
-        ListItemAdapter listItemAdapter = new ListItemAdapter(arrayList_item);
-        recyclerViewItems.setAdapter(listItemAdapter);
+        // ==========================
+        // pruebasSSSSSSSSS
+        btn_getmusic = view.findViewById(R.id.btn_prueba);
+        btn_getmusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getAllFilesMp3(v);
+            }
+        });
 
         return view;
     }

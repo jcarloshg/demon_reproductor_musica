@@ -37,6 +37,31 @@ public class DBPlaylist extends DB {
         return id_playlist;
     }
 
+    public ArrayList<ListItem> get_playlist_for_name(String name_list){
+        DB db = new DB(this.context);
+        SQLiteDatabase sqLiteDatabase = db.getReadableDatabase();
+
+        ArrayList<ListItem> list = new ArrayList<>();
+
+        String[] parameters = {name_list};
+        String[] camps = {DB.PLAYLIST_COLUMN_ID, DB.PLAYLIST_COLUMN_NAME};
+
+        Cursor cursor = sqLiteDatabase.query(DB.TABLE_PLAYLIST, camps, DB.PLAYLIST_COLUMN_NAME+"=?",
+                parameters, null,null, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                ListItem listItem = new ListItem();
+                listItem.setId(cursor.getInt(0));
+                listItem.setTitle(cursor.getString(1));
+                listItem.setSubtitle(null);
+                list.add(listItem);
+            }while (cursor.moveToNext());
+        }
+        
+        return list;
+    }
+
     public ArrayList<ListItem> get_all_laylist(){
         DB db = new DB(this.context);
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
