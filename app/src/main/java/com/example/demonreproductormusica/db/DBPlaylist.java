@@ -46,8 +46,11 @@ public class DBPlaylist extends DB {
         String[] parameters = {name_list};
         String[] camps = {DB.PLAYLIST_COLUMN_ID, DB.PLAYLIST_COLUMN_NAME};
 
-        Cursor cursor = sqLiteDatabase.query(DB.TABLE_PLAYLIST, camps, DB.PLAYLIST_COLUMN_NAME+"=?",
-                parameters, null,null, null);
+        Cursor cursor = sqLiteDatabase.rawQuery(
+                "SELECT * " +
+                        "FROM " + DB.TABLE_PLAYLIST +
+                        " WHERE " + DB.PLAYLIST_COLUMN_NAME + " LIKE '%" + name_list + "%';"
+                , null);
 
         if (cursor.moveToFirst()){
             do {

@@ -9,7 +9,11 @@
         android:id="@+id/nav_bibloteca"
         android:name="com.example.demonreproductormusica.BiblotecaFragment"
         android:label="fragment_bibloteca"
-        tools:layout="@layout/fragment_bibloteca" />
+        tools:layout="@layout/fragment_bibloteca" >
+        <action
+            android:id="@+id/action_nav_bibloteca_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_reproductor"
         android:name="com.example.demonreproductormusica.ReproductorFragment"

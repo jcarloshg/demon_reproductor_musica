@@ -1,11 +1,14 @@
 package com.example.demonreproductormusica.adaptadores;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demonreproductormusica.R;
@@ -51,6 +54,17 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
             textview_title = itemView.findViewById(R.id.textview_title);
             textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final NavController navController = Navigation.findNavController(v);
+                    navController.navigate(R.id.action_nav_bibloteca_to_playlistFragment);
+
+                    Log.d("[DESDE ITEM]", "onClick() called with: v = [" + v + "]");
+                }
+            });
         }
     }
 }
