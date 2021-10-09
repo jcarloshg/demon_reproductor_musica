@@ -162,7 +162,6 @@ public class BiblotecaFragment extends Fragment {
 
         contentResolver = context.getContentResolver();
         uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-
         cursor = contentResolver.query(uri, null, null, null, null);
 
         if (cursor == null) {

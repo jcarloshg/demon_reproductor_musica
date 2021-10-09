@@ -92,13 +92,19 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
         }
     }
 
-    // ======================================================
+    // ================================================================================
     // methods action
+    // ================================================================================
+
+    // ================================================================================
+    // navigate_to_reproductor
     public void navigate_to_reproductor(View v) {
         final NavController navController = Navigation.findNavController(v);
         navController.navigate(R.id.action_nav_bibloteca_to_playlistFragment);
     }
 
+    // ================================================================================
+    // navigate_to_reproductor
     public boolean select_option_popmenu(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.popup_song_add:
@@ -109,4 +115,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
         }
         return false;
     }
+
+
+
 }
