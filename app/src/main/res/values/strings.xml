@@ -16,4 +16,8 @@
     <string name="delete_to_list">Quitar de lista</string>
 
 
+    <!-- bottom sheet playlists -->
+    <string name="add_to_list_label">Agregar a lista</string>
+
+
 </resources>

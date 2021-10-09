@@ -2,7 +2,6 @@ package com.example.demonreproductormusica;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,13 +66,13 @@ public class BiblotecaFragment extends Fragment {
 
         // ===================================================================================
         // initialize recyclerViewItems
-        recyclerViewItems = view.findViewById(R.id.recycler_view);
+        recyclerViewItems = view.findViewById(R.id.recycler_view_playlist);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(null));
         this.get_all_items(view); // llenamos la list
 
         // ===================================================================================
         // create searchView and listener searchView
-        searchView = view.findViewById(R.id.search);
+        searchView = view.findViewById(R.id.search__playlist);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
