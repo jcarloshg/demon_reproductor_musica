@@ -109,23 +109,23 @@ public class BiblotecaFragment extends Fragment {
         return view;
     }
 
-    private boolean search_playlists(View view, String s){
+    private boolean search_playlists(View view, String s) {
         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext()); //creamos el objeto de la consulta
-        ArrayList<ListItem> arrayList =  dbPlaylist.get_playlist_for_name(s); // ejecutamos query y btenemos resultado
+        ArrayList<ListItem> arrayList = dbPlaylist.get_playlist_for_name(s); // ejecutamos query y btenemos resultado
         recyclerViewItems.setAdapter(new ListItemAdapter(arrayList)); // ponemos el resultado en el componete lista
 
         if (s.equals("")) get_all_items(view);
-        return  false;
+        return false;
     }
 
-    private void get_all_items(View view){
+    private void get_all_items(View view) {
         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
         arrayList_item = dbPlaylist.get_all_laylist();
         ListItemAdapter listItemAdapter = new ListItemAdapter(arrayList_item);
         recyclerViewItems.setAdapter(listItemAdapter);
     }
 
-    private void show_bottom_sheet_create_list(View view){
+    private void show_bottom_sheet_create_list(View view) {
         bottomSheetDialog = new BottomSheetDialog(view.getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_crate_list);
         bottomSheetDialog.setCanceledOnTouchOutside(true);
@@ -141,10 +141,9 @@ public class BiblotecaFragment extends Fragment {
                 DBPlaylist dbPlaylist = new DBPlaylist(v.getContext());
                 long id_new_playlist = dbPlaylist.insert_name_playlist(new_playlist_name);
 
-                if (id_new_playlist != -1){
+                if (id_new_playlist != -1) {
                     Toast.makeText(v.getContext(), "Playlist " + new_playlist_name + " creada!", Toast.LENGTH_LONG).show();
-                }
-                else
+                } else
                     Toast.makeText(v.getContext(), "Err al crear Playlist", Toast.LENGTH_LONG).show();
 
                 bottomSheetDialog.dismiss();

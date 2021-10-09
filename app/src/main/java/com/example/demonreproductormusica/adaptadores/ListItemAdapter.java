@@ -53,10 +53,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     public class ListItemHolder extends RecyclerView.ViewHolder {
 
         TextView textview_title, textview_subtitle;
+
         BottomSheetDialog bottomSheetDialog;
         SearchView searchView;
         RecyclerView recyclerViewItems;
-
 
         public ListItemHolder(@NonNull final View itemView) {
             super(itemView);
