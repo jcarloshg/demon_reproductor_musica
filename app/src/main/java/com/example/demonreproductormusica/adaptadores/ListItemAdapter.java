@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupMenu;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,11 +16,11 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demonreproductormusica.R;
+import com.example.demonreproductormusica.db.DBPlaylist;
 import com.example.demonreproductormusica.entidades.ListItem;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemHolder> {
 
@@ -35,7 +36,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.list_items, null, false
         );
-
         return new ListItemHolder(view);
     }
 
@@ -53,14 +53,19 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     public class ListItemHolder extends RecyclerView.ViewHolder {
 
         TextView textview_title, textview_subtitle;
+        BottomSheetDialog bottomSheetDialog;
+        SearchView searchView;
+        RecyclerView recyclerViewItems;
 
-        public ListItemHolder(@NonNull View itemView) {
+
+        public ListItemHolder(@NonNull final View itemView) {
             super(itemView);
 
             textview_title = itemView.findViewById(R.id.textview_title);
             textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
+
             // menu flotante
-            Button button_menu = itemView.findViewById(R.id.button_menu);
+            final Button button_menu = itemView.findViewById(R.id.button_menu);
             final PopupMenu popupMenu = new PopupMenu(itemView.getContext(), button_menu);
 
             // ==================================================================================
@@ -79,7 +84,14 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    return select_option_popmenu(item);
+                    switch (item.getItemId()) {
+                        case R.id.popup_song_add:
+                            show_bottomSheet_to_add_song(itemView);
+                            break;
+                        case R.id.popup_song_delete:
+                            Log.d("[popupMenu]", "popup_song_delete" + item);
+                    }
+                    return false;
                 }
             });
 
@@ -89,6 +101,49 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
                     popupMenu.show();
                 }
             });
+        }
+
+        // add song to playlist
+        private void show_bottomSheet_to_add_song(final View itemView) {
+            bottomSheetDialog = new BottomSheetDialog(itemView.getContext());
+            bottomSheetDialog.setContentView(R.layout.bottom_sheet_playlists);
+            bottomSheetDialog.setCanceledOnTouchOutside(true);
+
+            recyclerViewItems = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_recyclerview);
+            searchView = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_searchView);
+
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    ListItemAdapter listItemAdapter = (s.equals(""))
+                            ? get_all_items(itemView)
+                            : search_playlists(itemView, s);
+                    recyclerViewItems.setAdapter(listItemAdapter);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    ListItemAdapter listItemAdapter = (s.equals(""))
+                            ? get_all_items(itemView)
+                            : search_playlists(itemView, s);
+                    recyclerViewItems.setAdapter(listItemAdapter);
+                    return false;
+                }
+            });
+            bottomSheetDialog.show();
+        }
+
+        private ListItemAdapter search_playlists(View view, String s) {
+            DBPlaylist dbPlaylist = new DBPlaylist(view.getContext()); //creamos el objeto de la consulta
+            ArrayList<ListItem> arrayList = dbPlaylist.get_playlist_for_name(s); // ejecutamos query y btenemos resultado
+            return new ListItemAdapter(arrayList);
+        }
+
+        private ListItemAdapter get_all_items(View view) {
+            DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
+            ArrayList<ListItem> arrayList = dbPlaylist.get_all_laylist();
+            return new ListItemAdapter(arrayList);
         }
     }
 
@@ -104,18 +159,19 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     }
 
     // ================================================================================
-    // navigate_to_reproductor
-    public boolean select_option_popmenu(MenuItem item) {
+    // select_option_popmenu
+    /*
+    public boolean select_option_popmenu(MenuItem item, View itemView) {
         switch (item.getItemId()) {
             case R.id.popup_song_add:
-                Log.d("[popupMenu]", "popup_song_add " + item);
+                show_bottomSheet_to_add_song(itemView);
                 break;
             case R.id.popup_song_delete:
                 Log.d("[popupMenu]", "popup_song_delete" + item);
         }
         return false;
     }
-
+    */
 
 
 }

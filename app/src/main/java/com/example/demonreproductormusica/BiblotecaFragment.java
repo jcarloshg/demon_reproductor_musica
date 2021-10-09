@@ -29,7 +29,7 @@ import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link BiblotecaFragment#newInstance} factory method to
+ * Use the {@link BiblotecaFragment} factory method to
  * create an instance of this fragment.
  */
 public class BiblotecaFragment extends Fragment {
