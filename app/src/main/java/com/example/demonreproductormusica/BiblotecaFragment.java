@@ -2,17 +2,16 @@ package com.example.demonreproductormusica;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import com.example.demonreproductormusica.adaptadores.ListItemAdapter;
 import com.example.demonreproductormusica.db.DBPlaylist;
 import com.example.demonreproductormusica.entidades.ListItem;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -50,13 +48,13 @@ public class BiblotecaFragment extends Fragment {
     BottomSheetDialog bottomSheetDialog;
     EditText editText_name;
     SearchView searchView;
+    Button get_songs;
 
-    // pruebas
-    Button btn_getmusic;
+
+    ArrayList<ListItem> arrayList_item; // this is to save all type (albums, songs, list)
 
     // elements of view Library
     RecyclerView recyclerViewItems;
-    ArrayList<ListItem> arrayList_item;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,8 +100,8 @@ public class BiblotecaFragment extends Fragment {
 
         // ==========================
         // pruebasSSSSSSSSS
-        btn_getmusic = view.findViewById(R.id.btn_prueba);
-        btn_getmusic.setOnClickListener(new View.OnClickListener() {
+        get_songs = view.findViewById(R.id.get_songs);
+        get_songs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getAllFilesMp3(v);
@@ -158,10 +156,10 @@ public class BiblotecaFragment extends Fragment {
         bottomSheetDialog.show();
     }
 
-
-    // ========================================================
-    // metodos de prueba
     public void getAllFilesMp3(View view) {
+
+        arrayList_item.clear();
+
         contentResolver = context.getContentResolver();
         uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
@@ -172,18 +170,32 @@ public class BiblotecaFragment extends Fragment {
         } else if (!cursor.moveToFirst()) {
             Toast.makeText(null, "no hay musica", Toast.LENGTH_SHORT).show();
         } else {
-            int title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+
+            int column_id = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
+            int column_title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            int column_album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
+            int column_artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
             do {
-                String name = cursor.getString(title);
-                arrayList.add(name);
+                int id = cursor.getInt(column_id);
+                String name = cursor.getString(column_title);
+                String album = cursor.getString(column_album);
+                String artist = cursor.getString(column_artist);
+
+                ListItem listItem = new ListItem();
+                listItem.setId(id);
+                listItem.setTitle(name);
+                listItem.setSubtitle(album + " | " + artist);
+                arrayList_item.add(listItem);
+
             } while (cursor.moveToNext());
         }
 
-        for (String item : arrayList) {
-            Log.e("[PRUEBLA]", item);
-        }
+        ListItemAdapter listItemAdapter_song = new ListItemAdapter(arrayList_item);
+        recyclerViewItems.setAdapter(listItemAdapter_song);
     }
 
+    // ==============================================================================
+    // metodos de prueba
     public ArrayList<ListItem> createList(int num_items) {
         ArrayList<ListItem> items = new ArrayList<>();
 

@@ -59,35 +59,30 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
             textview_title = itemView.findViewById(R.id.textview_title);
             textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
+            // menu flotante
             Button button_menu = itemView.findViewById(R.id.button_menu);
+            final PopupMenu popupMenu = new PopupMenu(itemView.getContext(), button_menu);
 
+            // ==================================================================================
+            // mnavigate to fragment REPRODUCTOR
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    final NavController navController = Navigation.findNavController(v);
-                    navController.navigate(R.id.action_nav_bibloteca_to_playlistFragment);
-
-                    Log.d("[DESDE ITEM]", "onClick() called with: v = [" + v + "]");
+                    navigate_to_reproductor(v);
                 }
             });
 
 
-            final PopupMenu popupMenu = new PopupMenu(itemView.getContext(), button_menu);
+            // ==================================================================================
+            // menu flotante
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.popup_song_add:
-                            Log.d("[popupMenu]", "popup_song_add " + item);
-                            break;
-                        case R.id.popup_song_delete:
-                            Log.d("[popupMenu]", "popup_song_delete" + item);
-                    }
-                    return false;
+                    return select_option_popmenu(item);
                 }
             });
+
             button_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -95,5 +90,23 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
                 }
             });
         }
+    }
+
+    // ======================================================
+    // methods action
+    public void navigate_to_reproductor(View v) {
+        final NavController navController = Navigation.findNavController(v);
+        navController.navigate(R.id.action_nav_bibloteca_to_playlistFragment);
+    }
+
+    public boolean select_option_popmenu(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.popup_song_add:
+                Log.d("[popupMenu]", "popup_song_add " + item);
+                break;
+            case R.id.popup_song_delete:
+                Log.d("[popupMenu]", "popup_song_delete" + item);
+        }
+        return false;
     }
 }
