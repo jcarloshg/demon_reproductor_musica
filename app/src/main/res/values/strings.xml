@@ -11,10 +11,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- menu popup -->
+    <!-- menu popup song -->
     <string name="add_to_list">Agregar a lista</string>
     <string name="delete_to_list">Quitar de lista</string>
 
+    <!-- menu popup playlist -->
+    <string name="delete_playlist">Borrar playlist</string>
 
     <!-- bottom sheet playlists -->
     <string name="add_to_list_label">Agregar a lista</string>
