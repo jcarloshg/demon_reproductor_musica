@@ -2,8 +2,11 @@ package com.example.demonreproductormusica.adaptadores;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,11 +19,13 @@ import com.example.demonreproductormusica.entidades.ListItem;
 
 import java.util.ArrayList;
 
+import static android.content.ContentValues.TAG;
+
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemHolder> {
 
     ArrayList<ListItem> lista_listItem;
 
-    public ListItemAdapter(ArrayList<ListItem> listItem){
+    public ListItemAdapter(ArrayList<ListItem> listItem) {
         this.lista_listItem = listItem;
     }
 
@@ -54,6 +59,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
             textview_title = itemView.findViewById(R.id.textview_title);
             textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
+            Button button_menu = itemView.findViewById(R.id.button_menu);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -63,6 +69,29 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
                     navController.navigate(R.id.action_nav_bibloteca_to_playlistFragment);
 
                     Log.d("[DESDE ITEM]", "onClick() called with: v = [" + v + "]");
+                }
+            });
+
+
+            final PopupMenu popupMenu = new PopupMenu(itemView.getContext(), button_menu);
+            popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.popup_song_add:
+                            Log.d("[popupMenu]", "popup_song_add " + item);
+                            break;
+                        case R.id.popup_song_delete:
+                            Log.d("[popupMenu]", "popup_song_delete" + item);
+                    }
+                    return false;
+                }
+            });
+            button_menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupMenu.show();
                 }
             });
         }

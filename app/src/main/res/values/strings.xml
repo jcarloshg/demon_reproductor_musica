@@ -11,5 +11,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- menu popup -->
+    <string name="add_to_list">Agregar a lista</string>
+    <string name="delete_to_list">Quitar de lista</string>
+
 
 </resources>
