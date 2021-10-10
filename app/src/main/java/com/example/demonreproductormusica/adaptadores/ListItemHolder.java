@@ -44,11 +44,16 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         this.state_item = state_item;
 
         // ==================================================================================
-        // menu flotante
-        if (state_item.equals(ListItem.ITEM_PLAYLIST_LIST)) popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
-        if (state_item.equals(ListItem.ITEM_PLAYLIST_VIEW)) popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
-        if (state_item.equals(ListItem.ITEM_SONG_LIST)) popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
-        if (state_item.equals(ListItem.ITEM_SONG_VIEW)) popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
+        // menu flotante -> dependiendo del estado podremos abrir diferentes menus
+        // https://stackoverflow.com/questions/27895108/nullpointerexception-attempt-to-invoke-virtual-method-boolean-java-lang-string
+        if (this.state_item != null && this.state_item.equals("ITEM_PLAYLIST_LIST"))
+            popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
+        if (this.state_item != null && state_item.equals(ListItem.ITEM_PLAYLIST_VIEW))
+            popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
+        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST))
+            popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
+        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_VIEW))
+            popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
 
     }
 
@@ -70,12 +75,17 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
         // ==================================================================================
         // menu flotante
+        init_meu_float(itemView);
+
+    }
+
+    private void init_meu_float(final View itemView) {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.popup_playlist_delete:
-                        Log.d("[popupMenu]", "asdkfjasdklñfjaslñdfjasñldfkjaslñkdjfonMenuItemClick() called with: item = [" + item + "]");
+                        Log.d("[popupMenu]", "popup_playlist_delete" + item);
                         break;
                     case R.id.popup_song_add:
                         show_bottomSheet_to_add_song(itemView);
@@ -93,7 +103,6 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
                 popupMenu.show();
             }
         });
-
     }
 
     private void init(View itemView) {
@@ -105,7 +114,6 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         button_menu = itemView.findViewById(R.id.button_menu);
         popupMenu = new PopupMenu(itemView.getContext(), button_menu);
     }
-
 
 
     // navigate_to_reproductor // ================================================================================
