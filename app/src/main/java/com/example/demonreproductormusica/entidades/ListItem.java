@@ -10,6 +10,9 @@ public class ListItem {
     private int id;
     private String title;
     private String subtitle;
+    // its to activate actions on view fragments/bottomSheet
+    // ej. if this item is show on bottomSheet_playlist, action -> add song to playlist
+    // ej. if this item is show on Bibloteca(show playlist), action -> go to reproductor
     private String TYPE;
 
     public ListItem(int _id, String _title, String _subtitle, String _TYPE) {

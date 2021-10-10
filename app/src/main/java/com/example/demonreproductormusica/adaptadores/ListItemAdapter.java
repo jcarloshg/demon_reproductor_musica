@@ -33,6 +33,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
     public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
         holder.textview_title.setText(lista_listItem.get(position).getTitle());
         holder.textview_subtitle.setText(lista_listItem.get(position).getSubtitle());
+        holder.setState_item(lista_listItem.get(position).getTYPE());
     }
 
     @Override

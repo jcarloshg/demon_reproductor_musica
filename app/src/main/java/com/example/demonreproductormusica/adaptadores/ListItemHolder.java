@@ -25,6 +25,8 @@ import static android.content.ContentValues.TAG;
 
 public class ListItemHolder extends RecyclerView.ViewHolder {
 
+    String state_item;
+
     // view lista_listItem's attributes
     TextView textview_title, textview_subtitle;
 
@@ -32,6 +34,11 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
     BottomSheetDialog bottomSheetDialog;
     SearchView searchView;
     RecyclerView recyclerViewItems;
+
+    // dependiendo del estado podremos hacer o no, ciertas acciones
+    public void setState_item(String state_item) {
+        this.state_item = state_item;
+    }
 
     public ListItemHolder(final View itemView) {
         super(itemView);
@@ -48,7 +55,8 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigate_to_reproductor(v);
+                Log.d("[STATE_ITEM]", state_item);
+                // navigate_to_reproductor(v);
             }
         });
 
@@ -93,7 +101,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
         searchView = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_searchView);
         recyclerViewItems = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_recyclerview);
-        // add this to fix ---> E/RecyclerView: No adapter attached; skipping layout
+        // add this to fix --->
         LinearLayoutManager manager = new LinearLayoutManager(itemView.getContext());
         recyclerViewItems.setLayoutManager(manager);
         recyclerViewItems.setHasFixedSize(true);

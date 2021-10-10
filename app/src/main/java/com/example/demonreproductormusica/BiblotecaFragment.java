@@ -48,9 +48,6 @@ public class BiblotecaFragment extends Fragment {
     SearchView searchView;
     Button get_songs;
 
-
-    ArrayList<ListItem> arrayList_item; // this is to save all type (albums, songs, list)
-
     // elements of view Library
     RecyclerView recyclerViewItems;
 
@@ -68,7 +65,12 @@ public class BiblotecaFragment extends Fragment {
         // initialize recyclerViewItems
         recyclerViewItems = view.findViewById(R.id.recycler_view_playlist);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(null));
-        this.get_all_items(view); // llenamos la list
+
+        // ===================================================================================
+        // llenamos con las playlist el modal
+        ArrayList<ListItem> list = new DBPlaylist(view.getContext()).get_all_laylist();
+        for (ListItem item : list) item.setTYPE(ListItem.ITEM_SONG_LIST);
+        recyclerViewItems.setAdapter( new ListItemAdapter(list) );
 
         // ===================================================================================
         // create searchView and listener searchView
@@ -76,12 +78,16 @@ public class BiblotecaFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                return search_playlists(view, s);
+                ListItemAdapter listItemAdapter = search_playlists(view, s);
+                recyclerViewItems.setAdapter(listItemAdapter);
+                return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
-                return search_playlists(view, s);
+            public boolean onQueryTextChange(String s){
+                ListItemAdapter listItemAdapter = search_playlists(view, s);
+                recyclerViewItems.setAdapter(listItemAdapter);
+                return false;
             }
         });
 
@@ -95,34 +101,28 @@ public class BiblotecaFragment extends Fragment {
             }
         });
 
-
-        // ==========================
-        // pruebasSSSSSSSSS
+        // ===================================================================================
+        // get songs
         get_songs = view.findViewById(R.id.get_songs);
         get_songs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getAllFilesMp3(v);
+                ListItemAdapter listItemAdapter = getAllFilesMp3();
+                recyclerViewItems.setAdapter(listItemAdapter);
             }
         });
 
         return view;
     }
 
-    private boolean search_playlists(View view, String s) {
+    private ListItemAdapter search_playlists(View view, String s) {
+
         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext()); //creamos el objeto de la consulta
-        ArrayList<ListItem> arrayList = dbPlaylist.get_playlist_for_name(s); // ejecutamos query y btenemos resultado
-        recyclerViewItems.setAdapter(new ListItemAdapter(arrayList)); // ponemos el resultado en el componete lista
+        ArrayList<ListItem> arrayList = s.equals("")
+                ? dbPlaylist.get_all_laylist() // ejecutamos query y btenemos resultado
+                : dbPlaylist.get_playlist_for_name(s);
 
-        if (s.equals("")) get_all_items(view);
-        return false;
-    }
-
-    private void get_all_items(View view) {
-        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
-        arrayList_item = dbPlaylist.get_all_laylist();
-        ListItemAdapter listItemAdapter = new ListItemAdapter(arrayList_item);
-        recyclerViewItems.setAdapter(listItemAdapter);
+        return new ListItemAdapter(arrayList);
     }
 
     private void show_bottom_sheet_create_list(View view) {
@@ -153,9 +153,9 @@ public class BiblotecaFragment extends Fragment {
         bottomSheetDialog.show();
     }
 
-    public void getAllFilesMp3(View view) {
+    public ListItemAdapter getAllFilesMp3() {
 
-        arrayList_item.clear();
+        ArrayList<ListItem> list = new ArrayList<>();
 
         contentResolver = context.getContentResolver();
         uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -181,24 +181,15 @@ public class BiblotecaFragment extends Fragment {
                 listItem.setId(id);
                 listItem.setTitle(name);
                 listItem.setSubtitle(album + " | " + artist);
-                arrayList_item.add(listItem);
+                list.add(listItem);
 
             } while (cursor.moveToNext());
         }
 
-        ListItemAdapter listItemAdapter_song = new ListItemAdapter(arrayList_item);
-        recyclerViewItems.setAdapter(listItemAdapter_song);
-    }
+        for (ListItem item : list)
+            item.setTYPE(ListItem.ITEM_SONG_LIST);
 
-    // ==============================================================================
-    // metodos de prueba
-    public ArrayList<ListItem> createList(int num_items) {
-        ArrayList<ListItem> items = new ArrayList<>();
-
-        for (int i = 0; i < num_items; i++)
-            items.add(new ListItem(i, Integer.toString(i), Integer.toString(i)));
-
-        return items;
+        return new ListItemAdapter(list);
     }
 
 }
