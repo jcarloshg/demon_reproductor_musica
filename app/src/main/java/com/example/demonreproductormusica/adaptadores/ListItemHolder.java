@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demonreproductormusica.R;
 import com.example.demonreproductormusica.db.DBPlaylist;
+import com.example.demonreproductormusica.db.DBPlaylistSong;
 import com.example.demonreproductormusica.entidades.ListItem;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -84,6 +86,13 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         textview_title = itemView.findViewById(R.id.textview_title);
         textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
 
+        // add song to playlist
+        bottomSheetDialog = new BottomSheetDialog(itemView.getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_playlists);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        searchView = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_searchView);
+        recyclerViewItems = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_recyclerview);
+
         // menu flotante
         button_menu = itemView.findViewById(R.id.button_menu);
         popupMenu = new PopupMenu(itemView.getContext(), button_menu);
@@ -103,7 +112,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
                 if (state_item != null && state_item.equals(ListItem.ITEM_PLAYLIST_VIEW))
                     insert_song_to_playlist(v);
-//
+
 //                if (state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST))
 //
 //                if (state_item != null && state_item.equals(ListItem.ITEM_SONG_VIEW))
@@ -122,14 +131,21 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
     }
 
     private void insert_song_to_playlist(View view){
-        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
+        DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(view.getContext());
 
-        Log.i("[insert_song_to_playlist]", Integer.toString(listItem.getId()));
-        Log.i("[insert_song_to_playlist]", "insert_song_to_playlist: " + Integer.toString(listItem.getId_auxiliary()));
+        long id_new_insert = dbPlaylistSong.insert_song_to_playlist(listItem.getId(), listItem.getId_auxiliary());
 
+        if (id_new_insert != -1) {
+            Toast.makeText(view.getContext(), "Canción agregada correctamente", Toast.LENGTH_LONG).show();
+            bottomSheetDialog.dismiss();
+        } else
+            Toast.makeText(view.getContext(), "Err, nos e puede añadir canción", Toast.LENGTH_LONG).show();
+
+        // dbPlaylistSong.view_all_elements();
     }
 
     // init_meu_float  // ================================================================================
+
     private void init_meu_float(final View itemView) {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -158,12 +174,6 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
     // add song to playlist // ================================================================================
     private void show_bottomSheet_to_add_song(final View itemView) {
-        bottomSheetDialog = new BottomSheetDialog(itemView.getContext());
-        bottomSheetDialog.setContentView(R.layout.bottom_sheet_playlists);
-        bottomSheetDialog.setCanceledOnTouchOutside(true);
-
-        searchView = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_searchView);
-        recyclerViewItems = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_recyclerview);
         // add this to fix -> "E/RecyclerView: No adapter attached; skipping layout"
         LinearLayoutManager manager = new LinearLayoutManager(itemView.getContext());
         recyclerViewItems.setLayoutManager(manager);
