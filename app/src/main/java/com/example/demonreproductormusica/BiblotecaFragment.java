@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,7 @@ public class BiblotecaFragment extends Fragment {
         // llenamos con las playlist
         ArrayList<ListItem> list = new DBPlaylist(view.getContext()).get_all_laylist();
         for (ListItem item : list) item.setTYPE(ListItem.ITEM_PLAYLIST_LIST);
-        recyclerViewItems.setAdapter( new ListItemAdapter(list) );
+        recyclerViewItems.setAdapter(new ListItemAdapter(list));
 
         // ===================================================================================
         // create searchView and listener searchView
@@ -84,7 +85,7 @@ public class BiblotecaFragment extends Fragment {
             }
 
             @Override
-            public boolean onQueryTextChange(String s){
+            public boolean onQueryTextChange(String s) {
                 ListItemAdapter listItemAdapter = search_playlists(view, s);
                 recyclerViewItems.setAdapter(listItemAdapter);
                 return false;
@@ -186,8 +187,10 @@ public class BiblotecaFragment extends Fragment {
             } while (cursor.moveToNext());
         }
 
-        for (ListItem item : list)
+        for (ListItem item : list) {
             item.setTYPE(ListItem.ITEM_SONG_LIST);
+            Log.i("[SONG]", "getAllFilesMp3: " + item.getTitle() + " id: " + item.getId());
+        }
 
         return new ListItemAdapter(list);
     }
