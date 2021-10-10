@@ -65,26 +65,46 @@ public class DBPlaylist extends DB {
         return list;
     }
 
-    public ArrayList<ListItem> get_all_laylist(){
+    public ArrayList<ListItem> get_all_laylist() {
         DB db = new DB(this.context);
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
 
         ArrayList<ListItem> list = new ArrayList<>();
-        Cursor cursor = null;
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + DB.TABLE_PLAYLIST, null);
 
-        cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + DB.TABLE_PLAYLIST, null);
-
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 ListItem listItem = new ListItem();
                 listItem.setId(cursor.getInt(0));
                 listItem.setTitle(cursor.getString(1));
                 listItem.setSubtitle(null);
                 list.add(listItem);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
         return list;
+    }
+
+    public ListItem get_playlist(String id) {
+        DB db = new DB(this.context);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+        ListItem playlist = new ListItem();
+
+        Cursor cursor = sqLiteDatabase.rawQuery(
+                "SELECT *" +
+                        " FROM " + DB.TABLE_PLAYLIST +
+                        " WHERE " + DB.PLAYLIST_COLUMN_ID + " = " + id,
+                null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                playlist.setId(cursor.getInt(0));
+                playlist.setTitle(cursor.getString(1));
+                playlist.setSubtitle(null);
+            } while (cursor.moveToNext());
+        }
+
+        return playlist;
     }
 
 }

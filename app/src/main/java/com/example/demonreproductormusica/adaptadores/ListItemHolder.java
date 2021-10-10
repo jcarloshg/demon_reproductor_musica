@@ -11,10 +11,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.demonreproductormusica.BiblotecaFragmentDirections;
+import com.example.demonreproductormusica.PlaylistFragment;
 import com.example.demonreproductormusica.R;
 import com.example.demonreproductormusica.db.DBPlaylist;
 import com.example.demonreproductormusica.db.DBPlaylistSong;
@@ -29,10 +32,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
     // properties auxiliary
     String state_item;
-    private int id_auxiliary;
-    private int id;
     ListItem listItem;
-
 
     // view lista_listItem's attributes
     TextView textview_title, textview_subtitle;
@@ -50,14 +50,6 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         this.listItem = listItem;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setId_auxiliary(int id_auxiliary) {
-        this.id_auxiliary = id_auxiliary;
-    }
-
     // dependiendo del estado podremos hacer o no, ciertas acciones
     public void setState_item(String state_item) {
         this.state_item = state_item;
@@ -66,7 +58,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         // https://stackoverflow.com/questions/27895108/nullpointerexception-attempt-to-invoke-virtual-method-boolean-java-lang-string
         if (this.state_item != null && this.state_item.equals("ITEM_PLAYLIST_LIST"))
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
-        if (this.state_item != null && state_item.equals(ListItem.ITEM_PLAYLIST_VIEW)){
+        if (this.state_item != null && state_item.equals(ListItem.ITEM_PLAYLIST_VIEW)) {
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
             init_state_ITEM_PLAYLIST_VIEW();
         }
@@ -77,7 +69,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
     }
 
-    private void init_state_ITEM_PLAYLIST_VIEW(){
+    private void init_state_ITEM_PLAYLIST_VIEW() {
         button_menu.setVisibility(View.INVISIBLE);
     }
 
@@ -126,11 +118,14 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
     // navigate_to_reproductor // ================================================================================
     public void navigate_to_reproductor(View v) {
-        final NavController navController = Navigation.findNavController(v);
-        navController.navigate(R.id.action_nav_bibloteca_to_playlistFragment);
+        NavDirections navDirections = BiblotecaFragmentDirections.actionNavBiblotecaToPlaylistFragment(
+                Integer.toString(listItem.getId()),
+                PlaylistFragment.TYPE_ARTIST
+        );
+        Navigation.findNavController(v).navigate(navDirections);
     }
 
-    private void insert_song_to_playlist(View view){
+    private void insert_song_to_playlist(View view) {
         DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(view.getContext());
 
         long id_new_insert = dbPlaylistSong.insert_song_to_playlist(listItem.getId(), listItem.getId_auxiliary());
@@ -139,9 +134,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
             Toast.makeText(view.getContext(), "Canción agregada correctamente", Toast.LENGTH_LONG).show();
             bottomSheetDialog.dismiss();
         } else
-            Toast.makeText(view.getContext(), "Err, nos e puede añadir canción", Toast.LENGTH_LONG).show();
-
-        // dbPlaylistSong.view_all_elements();
+            Toast.makeText(view.getContext(), "Err, no se puede añadir canción", Toast.LENGTH_LONG).show();
     }
 
     // init_meu_float  // ================================================================================
@@ -180,8 +173,8 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         recyclerViewItems.setHasFixedSize(true);
 
         //llenamos con las playlist el modal
-        ArrayList<ListItem> arrayList =new DBPlaylist(itemView.getContext()).get_all_laylist();
-        for (ListItem item: arrayList){ // sets the TYPE and the id song that called the modal
+        ArrayList<ListItem> arrayList = new DBPlaylist(itemView.getContext()).get_all_laylist();
+        for (ListItem item : arrayList) { // sets the TYPE and the id song that called the modal
             item.setTYPE(ListItem.ITEM_PLAYLIST_VIEW);
             item.setId_auxiliary(listItem.getId());
         }
@@ -212,7 +205,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
                 ? dbPlaylist.get_all_laylist() // ejecutamos query y btenemos resultado
                 : dbPlaylist.get_playlist_for_name(s);
 
-        for (ListItem item: arrayList) item.setTYPE(ListItem.ITEM_PLAYLIST_VIEW);
+        for (ListItem item : arrayList) item.setTYPE(ListItem.ITEM_PLAYLIST_VIEW);
 
         return new ListItemAdapter(arrayList);
     }

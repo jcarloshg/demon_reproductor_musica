@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/graph_navigation"
-    app:startDestination="@id/playlistFragment">
+    app:startDestination="@id/nav_bibloteca">
 
     <fragment
         android:id="@+id/nav_bibloteca"
@@ -23,7 +23,14 @@
         android:id="@+id/playlistFragment"
         android:name="com.example.demonreproductormusica.PlaylistFragment"
         android:label="fragment_playlist"
-        tools:layout="@layout/fragment_playlist" />
+        tools:layout="@layout/fragment_playlist" >
+        <argument
+            android:name="id_playlist"
+            app:argType="string" />
+        <argument
+            android:name="TYPE"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/nav_configuration"
         android:name="com.example.demonreproductormusica.ConfiguracionFragment"

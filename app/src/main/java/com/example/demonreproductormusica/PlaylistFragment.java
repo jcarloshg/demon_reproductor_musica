@@ -3,62 +3,90 @@ package com.example.demonreproductormusica;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.demonreproductormusica.db.DBPlaylist;
+import com.example.demonreproductormusica.db.DBPlaylistSong;
+import com.example.demonreproductormusica.entidades.ListItem;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PlaylistFragment#newInstance} factory method to
+ * Use the {@link PlaylistFragment} factory method to
  * create an instance of this fragment.
  */
 public class PlaylistFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    // types of view of fragment
+    public static final String TYPE_PLAYLIST = "TYPE_PLAYLIST";
+    public static final String TYPE_ALBUM = "TYPE_ALBUM";
+    public static final String TYPE_ARTIST = "TYPE_ARTIST";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    //atributes
+    String id_playlist;
+
+    TextView playlist_title;
+    TextView textView_subtitle;
+    RecyclerView playlist_recyclerView;
+
+    PlaylistFragmentArgs playlistFragmentArgs;
 
     public PlaylistFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PlaylistFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PlaylistFragment newInstance(String param1, String param2) {
-        PlaylistFragment fragment = new PlaylistFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    }
+
+    private void init_components(View view) {
+        playlist_title = view.findViewById(R.id.playlist_title);
+        textView_subtitle = view.findViewById(R.id.textView_subtitle);
+
+        // add this to fix -> "E/RecyclerView: No adapter attached; skipping layout"
+        playlist_recyclerView = view.findViewById(R.id.playlist_recyclerView);
+        LinearLayoutManager manager = new LinearLayoutManager(view.getContext());
+        playlist_recyclerView.setLayoutManager(manager);
+        playlist_recyclerView.setHasFixedSize(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playlist, container, false);
+        final View view = inflater.inflate(R.layout.fragment_playlist, container, false);
+        init_components(view);
+        playlistFragmentArgs = PlaylistFragmentArgs.fromBundle(getArguments());
+        init_view(view);
+        return view;
     }
+
+    private void init_view(View view) {
+        id_playlist = playlistFragmentArgs.getIdPlaylist();
+
+        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
+        ListItem listItem = dbPlaylist.get_playlist(id_playlist);
+
+        // sets the TYPE
+        listItem.setTYPE(ListItem.ITEM_SONG_LIST);
+        listItem.setId_auxiliary(listItem.getId());
+
+
+        playlist_title.setText(listItem.getTitle());
+        if (listItem.getSubtitle() == null)
+            textView_subtitle.setText("");
+        else
+            textView_subtitle.setText(listItem.getSubtitle());
+
+
+    }
+
 }

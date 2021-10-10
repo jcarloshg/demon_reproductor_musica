@@ -60,5 +60,4 @@ public class DBPlaylistSong extends DB {
             Log.e("[view_all_elements]", ex.toString());
         }
     }
-
 }
