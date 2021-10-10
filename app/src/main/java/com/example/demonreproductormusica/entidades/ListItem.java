@@ -3,7 +3,7 @@ package com.example.demonreproductormusica.entidades;
 public class ListItem {
 
     public static final String ITEM_PLAYLIST_VIEW = "ITEM_PLAYLIST_VIEW";
-    public static final String ITEM_PLAYLIST_LIST = "ITEM_PLAYLIST_VIEW";
+    public static final String ITEM_PLAYLIST_LIST = "ITEM_PLAYLIST_LIST";
     public static final String ITEM_SONG_VIEW = "ITEM_SONG_VIEW";
     public static final String ITEM_SONG_LIST = "ITEM_SONG_LIST";
 

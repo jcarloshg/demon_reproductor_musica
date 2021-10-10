@@ -67,9 +67,9 @@ public class BiblotecaFragment extends Fragment {
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(null));
 
         // ===================================================================================
-        // llenamos con las playlist el modal
+        // llenamos con las playlist
         ArrayList<ListItem> list = new DBPlaylist(view.getContext()).get_all_laylist();
-        for (ListItem item : list) item.setTYPE(ListItem.ITEM_SONG_LIST);
+        for (ListItem item : list) item.setTYPE(ListItem.ITEM_PLAYLIST_LIST);
         recyclerViewItems.setAdapter( new ListItemAdapter(list) );
 
         // ===================================================================================

@@ -35,20 +35,27 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
     SearchView searchView;
     RecyclerView recyclerViewItems;
 
+    // menu flotante
+    Button button_menu;
+    PopupMenu popupMenu;
+
     // dependiendo del estado podremos hacer o no, ciertas acciones
     public void setState_item(String state_item) {
         this.state_item = state_item;
+
+        // ==================================================================================
+        // menu flotante
+        if (state_item.equals(ListItem.ITEM_PLAYLIST_LIST)) popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
+        if (state_item.equals(ListItem.ITEM_PLAYLIST_VIEW)) popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
+        if (state_item.equals(ListItem.ITEM_SONG_LIST)) popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
+        if (state_item.equals(ListItem.ITEM_SONG_VIEW)) popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
+
     }
 
     public ListItemHolder(final View itemView) {
         super(itemView);
 
-        textview_title = itemView.findViewById(R.id.textview_title);
-        textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
-
-        // menu flotante
-        final Button button_menu = itemView.findViewById(R.id.button_menu);
-        final PopupMenu popupMenu = new PopupMenu(itemView.getContext(), button_menu);
+        init(itemView); // init widgets of list_items layout
 
         // ==================================================================================
         // mnavigate to fragment REPRODUCTOR
@@ -60,32 +67,46 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
             }
         });
 
+
         // ==================================================================================
         // menu flotante
-        popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.popup_playlist_delete:
+                        Log.d("[popupMenu]", "asdkfjasdklñfjaslñdfjasñldfkjaslñkdjfonMenuItemClick() called with: item = [" + item + "]");
+                        break;
                     case R.id.popup_song_add:
                         show_bottomSheet_to_add_song(itemView);
                         break;
                     case R.id.popup_song_delete:
                         Log.d("[popupMenu]", "popup_song_delete" + item);
+                        break;
                 }
                 return false;
             }
         });
-
         button_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popupMenu.show();
             }
         });
+
     }
 
-    // methods action ================================================================================
+    private void init(View itemView) {
+        // view lista_listItem's attributes
+        textview_title = itemView.findViewById(R.id.textview_title);
+        textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
+
+        // menu flotante
+        button_menu = itemView.findViewById(R.id.button_menu);
+        popupMenu = new PopupMenu(itemView.getContext(), button_menu);
+    }
+
+
 
     // navigate_to_reproductor // ================================================================================
     public void navigate_to_reproductor(View v) {
@@ -101,7 +122,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
         searchView = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_searchView);
         recyclerViewItems = bottomSheetDialog.findViewById(R.id.bottom_sheet_playlist_recyclerview);
-        // add this to fix --->
+        // add this to fix -> "E/RecyclerView: No adapter attached; skipping layout"
         LinearLayoutManager manager = new LinearLayoutManager(itemView.getContext());
         recyclerViewItems.setLayoutManager(manager);
         recyclerViewItems.setHasFixedSize(true);
