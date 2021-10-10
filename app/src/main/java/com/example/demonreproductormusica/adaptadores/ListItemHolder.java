@@ -57,6 +57,16 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
     }
 
+    private void init(View itemView) {
+        // view lista_listItem's attributes
+        textview_title = itemView.findViewById(R.id.textview_title);
+        textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
+
+        // menu flotante
+        button_menu = itemView.findViewById(R.id.button_menu);
+        popupMenu = new PopupMenu(itemView.getContext(), button_menu);
+    }
+
     public ListItemHolder(final View itemView) {
         super(itemView);
 
@@ -67,8 +77,15 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("[STATE_ITEM]", state_item);
-                // navigate_to_reproductor(v);
+                if (state_item != null && state_item.equals(ListItem.ITEM_PLAYLIST_LIST))
+                    navigate_to_reproductor(itemView);
+
+//                if (state_item != null && state_item.equals(ListItem.ITEM_PLAYLIST_VIEW))
+//
+//                if (state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST))
+//
+//                if (state_item != null && state_item.equals(ListItem.ITEM_SONG_VIEW))
+
             }
         });
 
@@ -76,7 +93,6 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         // ==================================================================================
         // menu flotante
         init_meu_float(itemView);
-
     }
 
     private void init_meu_float(final View itemView) {
@@ -105,17 +121,6 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private void init(View itemView) {
-        // view lista_listItem's attributes
-        textview_title = itemView.findViewById(R.id.textview_title);
-        textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
-
-        // menu flotante
-        button_menu = itemView.findViewById(R.id.button_menu);
-        popupMenu = new PopupMenu(itemView.getContext(), button_menu);
-    }
-
-
     // navigate_to_reproductor // ================================================================================
     public void navigate_to_reproductor(View v) {
         final NavController navController = Navigation.findNavController(v);
@@ -136,12 +141,9 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         recyclerViewItems.setHasFixedSize(true);
 
         //llenamos con las playlist el modal
-        recyclerViewItems.setAdapter(
-                new ListItemAdapter(
-                        new DBPlaylist(itemView.getContext()).
-                                get_all_laylist()
-                )
-        );
+        ArrayList<ListItem> arrayList =new DBPlaylist(itemView.getContext()).get_all_laylist();
+        for (ListItem item: arrayList) item.setTYPE(ListItem.ITEM_PLAYLIST_VIEW);
+        recyclerViewItems.setAdapter(new ListItemAdapter(arrayList));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -167,6 +169,8 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         ArrayList<ListItem> arrayList = s.equals("")
                 ? dbPlaylist.get_all_laylist() // ejecutamos query y btenemos resultado
                 : dbPlaylist.get_playlist_for_name(s);
+
+        for (ListItem item: arrayList) item.setTYPE(ListItem.ITEM_PLAYLIST_VIEW);
 
         return new ListItemAdapter(arrayList);
     }
