@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demonreproductormusica.BiblotecaFragmentDirections;
 import com.example.demonreproductormusica.PlaylistFragment;
+import com.example.demonreproductormusica.PlaylistFragmentDirections;
 import com.example.demonreproductormusica.R;
 import com.example.demonreproductormusica.db.DBPlaylist;
 import com.example.demonreproductormusica.db.DBPlaylistSong;
@@ -118,8 +119,11 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
     }
 
     private void navigate_to_reproductor(View itemView) {
-        Log.i("[navigate_to_reproductor]", "navigate_to_reproductor: CLICK");
-
+        NavDirections navDirections = PlaylistFragmentDirections.actionPlaylistFragmentToNavReproductor2(
+                Integer.toString(listItem.getId()),
+                Integer.toString(listItem.getId_auxiliary())
+        );
+        Navigation.findNavController(itemView).navigate(navDirections);
     }
 
     public void navigate_to_playlist(View v) {

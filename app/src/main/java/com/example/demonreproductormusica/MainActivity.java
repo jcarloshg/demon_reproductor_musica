@@ -1,5 +1,15 @@
 package com.example.demonreproductormusica;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,17 +19,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import android.Manifest;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.demonreproductormusica.db.DB;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,28 +37,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        // permission
-        getPermission();
-        context = getApplicationContext();
+        try {
+            setContentView(R.layout.activity_main);
 
-        // navigation
-        fragment_reproductor = new ReproductorFragment();
-        fragment_bibloteca = new BiblotecaFragment();
+            // permission
+            getPermission();
+            context = getApplicationContext();
 
-        bottomNavigationView = findViewById(R.id.nav_view);
+            // navigation
+            fragment_reproductor = new ReproductorFragment();
+            fragment_bibloteca = new BiblotecaFragment();
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_reproductor, R.id.nav_bibloteca, R.id.nav_configuration)
-                .build();
+            bottomNavigationView = findViewById(R.id.nav_view);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_reproductor, R.id.nav_bibloteca, R.id.nav_configuration)
+                    .build();
 
-        // add this line to see fragment name in ActionBar
-        // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
-        bottomNavigationView.setSelectedItemId(R.id.nav_reproductor);
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            // add this line to see fragment name in ActionBar
+            // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(bottomNavigationView, navController);
+            bottomNavigationView.setSelectedItemId(R.id.nav_bibloteca);
 
         /*
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -76,14 +76,17 @@ public class MainActivity extends AppCompatActivity {
         });
          */
 
-
-        //Create DB
-        DB db = new DB(this);
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-        if (sqLiteDatabase != null)
-            Toast.makeText(this, "DB created", Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(this, "DB not created", Toast.LENGTH_LONG).show();
+            //Create DB
+            DB db = new DB(this);
+            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+            if (sqLiteDatabase != null)
+                Toast.makeText(this, "DB created", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(this, "DB not created", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.e("[ERROR MAIN]", "onCreateView", e);
+            throw e;
+        }
     }
 
     private void getPermission() {
