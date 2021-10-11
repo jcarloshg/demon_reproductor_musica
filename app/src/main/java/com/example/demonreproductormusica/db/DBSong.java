@@ -38,9 +38,9 @@ public class DBSong extends DB {
         Cursor cursor_song = contentResolver.query(uri, column_projection, selection_column, selection_agr, null);
 
         if (cursor_song == null) {
-            Toast.makeText(null, "algo salio mal :(", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "algo salio mal :(", Toast.LENGTH_SHORT).show();
         } else if (!cursor_song.moveToFirst()) {
-            Toast.makeText(null, "no hay musica", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "no hay musica", Toast.LENGTH_SHORT).show();
         } else {
             do {
                 int id = cursor_song.getInt(0);

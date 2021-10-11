@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.demonreproductormusica.adaptadores.ListItemAdapter;
 import com.example.demonreproductormusica.db.DBPlaylist;
 import com.example.demonreproductormusica.db.DBPlaylistSong;
 import com.example.demonreproductormusica.entidades.ListItem;
@@ -75,24 +76,30 @@ public class PlaylistFragment extends Fragment {
     private void init_view(View view) {
         id_playlist = playlistFragmentArgs.getIdPlaylist();
 
+        // get info about playlist by his id
         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
         playlist_info = dbPlaylist.get_playlist_info(id_playlist);
 
+        // put the name playlist, and if is album/artist put too the subtitle
         playlist_title.setText(playlist_info.getTitle());
         if (playlist_info.getSubtitle() == null)
             textView_subtitle.setText("");
         else
             textView_subtitle.setText(playlist_info.getSubtitle());
 
+        // get songs of playlist
         DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(view.getContext());
         playlist = dbPlaylistSong.get_playlist(playlist_info.getId());
 
+        // assign auxiliary id and type for actions
         for (ListItem item: playlist) {
-            Log.i("[NAME_SONG]", "init_view: " + item.getTitle());
+            Log.i("[NAME_SONG]", "init_view: " + item);
             item.setId_auxiliary(playlist_info.getId());
             item.setTYPE(ListItem.ITEM_SONG_LIST);
         }
-        
+
+        playlist_recyclerView.setAdapter(new ListItemAdapter(playlist));
+
     }
 
 }
