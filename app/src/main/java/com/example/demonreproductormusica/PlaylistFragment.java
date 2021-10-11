@@ -89,6 +89,8 @@ public class PlaylistFragment extends Fragment {
 
         for (ListItem item: playlist) {
             Log.i("[NAME_SONG]", "init_view: " + item.getTitle());
+            item.setId_auxiliary(playlist_info.getId());
+            item.setTYPE(ListItem.ITEM_SONG_LIST);
         }
         
     }
