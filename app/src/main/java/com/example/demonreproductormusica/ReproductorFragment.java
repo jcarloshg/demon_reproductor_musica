@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +31,11 @@ public class ReproductorFragment extends Fragment {
 
     // VIEW
     TextView tView_name, tView_artist, tview_time_start, tview_time_end;
-    ImageView iView_play_pause, iView_play_next, iView_play_previous;
+    ImageView iView_play_pause, iView_play_next, iView_play_previous, iView_pause;
     private SeekBar seekBar;
     MediaPlayer mediaPlayer;
+
+    private Handler myHandler = new Handler();
 
     boolean is_play_song = false;
 
@@ -60,6 +63,7 @@ public class ReproductorFragment extends Fragment {
         seekBar.setClickable(false);
 
         iView_play_pause = view.findViewById(R.id.iView_play_pause);
+        iView_pause = view.findViewById(R.id.iView_pause);
         iView_play_next = view.findViewById(R.id.iView_play_next);
         iView_play_previous = view.findViewById(R.id.iView_play_previous);
 
@@ -83,17 +87,17 @@ public class ReproductorFragment extends Fragment {
 
         mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
 
+        iView_play_pause.setVisibility(View.VISIBLE);
+        iView_pause.setVisibility(View.GONE);
+
         iView_play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (is_play_song) {
-                    mediaPlayer.stop();
-                    is_play_song = false;
-                } else {
-                    mediaPlayer.start();
-                    is_play_song = true;
-                }
+                mediaPlayer.start();
+                iView_play_pause.setVisibility(View.GONE);
+                iView_pause.setVisibility(View.VISIBLE);
+
 
                 finalTime = mediaPlayer.getDuration();
                 startTime = mediaPlayer.getCurrentPosition();
@@ -113,7 +117,19 @@ public class ReproductorFragment extends Fragment {
                 );
 
                 seekBar.setProgress((int) startTime);
+                myHandler.postDelayed(UpdateSongTime, 100);
             }
+        });
+
+
+        iView_pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.pause();
+                iView_play_pause.setVisibility(View.VISIBLE);
+                iView_pause.setVisibility(View.GONE);
+            }
+
         });
 
         return view;
@@ -130,5 +146,19 @@ public class ReproductorFragment extends Fragment {
         tView_name.setText(song.getTitle());
         tView_artist.setText(song.getSubtitle());
     }
+
+    private Runnable UpdateSongTime = new Runnable() {
+        public void run() {
+            startTime = mediaPlayer.getCurrentPosition();
+            tview_time_start.setText(String.format("%d:%d",
+                    TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                    TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                    toMinutes((long) startTime)))
+            );
+            seekBar.setProgress((int) startTime);
+            myHandler.postDelayed(this, 100);
+        }
+    };
 
 }
