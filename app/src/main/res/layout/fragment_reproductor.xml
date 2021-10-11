@@ -44,7 +44,7 @@
             android:tint="@color/white" />
 
         <ImageView
-            android:id="@+id/iView_previous"
+            android:id="@+id/iView_play_previous"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
@@ -59,7 +59,8 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="16dp"
             android:src="@drawable/ic_play"
-            android:tint="@color/white" />
+            android:tint="@color/white"
+            app:srcCompat="@drawable/ic_play" />
 
         <ImageView
             android:id="@+id/iView_play_next"
@@ -86,14 +87,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="32dp"
         android:src="@drawable/ic_favorite"
         android:tint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout3" />
+        app:layout_constraintStart_toEndOf="@+id/linearLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/iView_cover_page" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -145,7 +148,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tview_time_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -156,7 +159,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tview_time_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -175,7 +178,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toStartOf="@+id/textView4"
-        app:layout_constraintStart_toEndOf="@+id/textView3" />
+        app:layout_constraintEnd_toStartOf="@+id/tview_time_end"
+        app:layout_constraintStart_toEndOf="@+id/tview_time_start" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

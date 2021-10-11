@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -58,5 +59,28 @@ public class DBSong extends DB {
         }
 
         return song;
+    }
+
+    public String get_uri(int id_song) {
+        String filePath = null;
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+        if (uri != null && "content".equals(uri.getScheme())) {
+
+            final String[] column_projection = new String[]{MediaStore.Audio.Media.DATA};
+            final String selection_column = MediaStore.Audio.Media._ID + " = ?";
+            final String[] selection_agr = new String[]{Integer.toString(id_song)};
+
+            Cursor cursor = contentResolver.query(uri, column_projection, selection_column, selection_agr, null);
+            cursor.moveToFirst();
+            filePath = cursor.getString(0);
+            cursor.close();
+        } else {
+            filePath = uri.getPath();
+        }
+
+        return filePath;
     }
 }
