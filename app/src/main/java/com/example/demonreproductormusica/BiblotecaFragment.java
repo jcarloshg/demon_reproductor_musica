@@ -172,20 +172,20 @@ public class BiblotecaFragment extends Fragment {
             int column_title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int column_album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
             int column_artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-            do {
-                int id = cursor.getInt(column_id);
-                String name = cursor.getString(column_title);
-                String album = cursor.getString(column_album);
-                String artist = cursor.getString(column_artist);
+        do {
+            int id = cursor.getInt(column_id);
+            String name = cursor.getString(column_title);
+            String album = cursor.getString(column_album);
+            String artist = cursor.getString(column_artist);
 
-                ListItem listItem = new ListItem();
-                listItem.setId(id);
-                listItem.setTitle(name);
-                listItem.setSubtitle(album + " | " + artist);
-                list.add(listItem);
+            ListItem listItem = new ListItem();
+            listItem.setId(id);
+            listItem.setTitle(name);
+            listItem.setSubtitle(album + " | " + artist);
+            list.add(listItem);
 
-            } while (cursor.moveToNext());
-        }
+        } while (cursor.moveToNext());
+    }
 
         for (ListItem item : list) {
             item.setTYPE(ListItem.ITEM_SONG_LIST);

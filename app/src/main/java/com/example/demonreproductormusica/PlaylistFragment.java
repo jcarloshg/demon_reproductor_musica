@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +32,14 @@ public class PlaylistFragment extends Fragment {
 
     //atributes
     String id_playlist;
+    ArrayList<ListItem> playlist; // this save songs
 
     TextView playlist_title;
     TextView textView_subtitle;
     RecyclerView playlist_recyclerView;
 
     PlaylistFragmentArgs playlistFragmentArgs;
+    ListItem playlist_info = null;
 
     public PlaylistFragment() {
         // Required empty public constructor
@@ -73,20 +76,21 @@ public class PlaylistFragment extends Fragment {
         id_playlist = playlistFragmentArgs.getIdPlaylist();
 
         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
-        ListItem listItem = dbPlaylist.get_playlist(id_playlist);
+        playlist_info = dbPlaylist.get_playlist_info(id_playlist);
 
-        // sets the TYPE
-        listItem.setTYPE(ListItem.ITEM_SONG_LIST);
-        listItem.setId_auxiliary(listItem.getId());
-
-
-        playlist_title.setText(listItem.getTitle());
-        if (listItem.getSubtitle() == null)
+        playlist_title.setText(playlist_info.getTitle());
+        if (playlist_info.getSubtitle() == null)
             textView_subtitle.setText("");
         else
-            textView_subtitle.setText(listItem.getSubtitle());
+            textView_subtitle.setText(playlist_info.getSubtitle());
 
+        DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(view.getContext());
+        playlist = dbPlaylistSong.get_playlist(playlist_info.getId());
 
+        for (ListItem item: playlist) {
+            Log.i("[NAME_SONG]", "init_view: " + item.getTitle());
+        }
+        
     }
 
 }

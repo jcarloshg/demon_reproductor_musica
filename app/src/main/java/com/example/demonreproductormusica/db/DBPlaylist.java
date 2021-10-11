@@ -85,7 +85,7 @@ public class DBPlaylist extends DB {
         return list;
     }
 
-    public ListItem get_playlist(String id) {
+    public ListItem get_playlist_info(String id) {
         DB db = new DB(this.context);
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         ListItem playlist = new ListItem();
