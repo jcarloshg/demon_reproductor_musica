@@ -100,12 +100,13 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (state_item != null && state_item.equals(ListItem.ITEM_PLAYLIST_LIST))
-                    navigate_to_reproductor(itemView);
+                    navigate_to_playlist(itemView);
 
                 if (state_item != null && state_item.equals(ListItem.ITEM_PLAYLIST_VIEW))
                     insert_song_to_playlist(v);
 
-//                if (state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST))
+                if (state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST))
+                    navigate_to_reproductor(itemView);
 //
 //                if (state_item != null && state_item.equals(ListItem.ITEM_SONG_VIEW))
 
@@ -116,8 +117,12 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         init_meu_float(itemView);
     }
 
-    // navigate_to_reproductor // ================================================================================
-    public void navigate_to_reproductor(View v) {
+    private void navigate_to_reproductor(View itemView) {
+        Log.i("[navigate_to_reproductor]", "navigate_to_reproductor: CLICK");
+
+    }
+
+    public void navigate_to_playlist(View v) {
         NavDirections navDirections = BiblotecaFragmentDirections.actionNavBiblotecaToPlaylistFragment(
                 Integer.toString(listItem.getId()),
                 PlaylistFragment.TYPE_ARTIST
@@ -136,8 +141,6 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         } else
             Toast.makeText(view.getContext(), "Err, no se puede añadir canción", Toast.LENGTH_LONG).show();
     }
-
-    // init_meu_float  // ================================================================================
 
     private void init_meu_float(final View itemView) {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -165,7 +168,6 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    // add song to playlist // ================================================================================
     private void show_bottomSheet_to_add_song(final View itemView) {
         // add this to fix -> "E/RecyclerView: No adapter attached; skipping layout"
         LinearLayoutManager manager = new LinearLayoutManager(itemView.getContext());

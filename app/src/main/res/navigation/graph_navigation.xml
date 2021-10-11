@@ -18,7 +18,11 @@
         android:id="@+id/nav_reproductor"
         android:name="com.example.demonreproductormusica.ReproductorFragment"
         android:label="fragment_reproductor"
-        tools:layout="@layout/fragment_reproductor" />
+        tools:layout="@layout/fragment_reproductor" >
+        <argument
+            android:name="song"
+            app:argType="com.example.demonreproductormusica.entidades.ListItem" />
+    </fragment>
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.example.demonreproductormusica.PlaylistFragment"
@@ -30,6 +34,9 @@
         <argument
             android:name="TYPE"
             app:argType="string" />
+        <action
+            android:id="@+id/action_playlistFragment_to_nav_reproductor"
+            app:destination="@id/nav_reproductor" />
     </fragment>
     <fragment
         android:id="@+id/nav_configuration"
