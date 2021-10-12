@@ -43,7 +43,7 @@ public class DBCurrentPlaylist extends DB {
 
         try {
             Cursor cursor_TABLE_PLAYLIST_SONG = sqLiteDatabase.rawQuery(
-                    "SELECT * FROM " + DB.CURRENT_PLAYLIST ,
+                    "SELECT * FROM " + DB.CURRENT_PLAYLIST,
                     null);
 
             if (cursor_TABLE_PLAYLIST_SONG.moveToFirst()) {
@@ -80,25 +80,51 @@ public class DBCurrentPlaylist extends DB {
         }
     }
 
-    public int get_IDSONG_on_CURRENTPLAYLIST_by_IDSONGMEDIAPLAYER(final Integer ID_SONG_MEDIAPLAYER){
+    public int get_IDSONG_on_CURRENTPLAYLIST_by_IDSONGMEDIAPLAYER(Integer ID_SONG_MEDIAPLAYER) {
         int id_song = -1;
 
-        try{
+        try {
             DB db = new DB(this.context);
             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
 
             Cursor cursor = sqLiteDatabase.rawQuery(
                     "SELECT *" +
                             " FROM " + DB.CURRENT_PLAYLIST +
-                            " WHERE " + DB.CURRENT_PLAYLIST_ID__SONG_MEDIAPLAYER + " = " + Integer.toString(ID_SONG_MEDIAPLAYER),
+                            " WHERE " + DB.CURRENT_PLAYLIST_ID__SONG_MEDIAPLAYER + " = " + ID_SONG_MEDIAPLAYER,
                     null);
 
-            id_song = cursor.getInt(0);
+
+            if (cursor.moveToFirst()) {
+                id_song = cursor.getInt(0); // get id of song on table
+            }
 
         } catch (Exception ex) {
             Log.e("[get_CURRENT_PLAYLIST_ID_SONG]", ex.toString());
         }
 
         return id_song;
+    }
+
+    public int get_IDSONGMEDIAPLAYER_by_IDSONG(int ID_SONG) {
+        int ID_SONG_MEDIA_PLAYER = -1;
+
+        try {
+            DB db = new DB(this.context);
+            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+
+            Cursor cursor = sqLiteDatabase.rawQuery(
+                    "SELECT *" +
+                            " FROM " + DB.CURRENT_PLAYLIST +
+                            " WHERE " + DB.CURRENT_PLAYLIST_ID_SONG + " = " + ID_SONG,
+                    null);
+
+            if (cursor.moveToFirst()) {
+                ID_SONG_MEDIA_PLAYER = cursor.getInt(1); // get id of song on table // get id of song on table
+            }
+        } catch (Exception ex) {
+            Log.e("[get_IDSONGMEDIAPLAYER_by_IDSONG]", ex.toString());
+        }
+
+        return ID_SONG_MEDIA_PLAYER;
     }
 }

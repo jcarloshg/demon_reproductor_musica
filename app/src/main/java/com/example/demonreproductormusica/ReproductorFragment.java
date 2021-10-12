@@ -1,13 +1,11 @@
 package com.example.demonreproductormusica;
 
+import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +14,12 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.demonreproductormusica.db.DBCurrentPlaylist;
 import com.example.demonreproductormusica.db.DBSong;
-import com.example.demonreproductormusica.entidades.ListItem;
+
+import com.example.demonreproductormusica.entidades.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +38,8 @@ public class ReproductorFragment extends Fragment {
 
     // ReproductorFragmentArgs reproductorFragmentArgs;
     ListItem song;
+
+    ArrayList<Uri> arrayList_uris = new ArrayList<>(); // playlist on reproductor
 
     // VIEW
     TextView tView_name, tView_artist, tview_time_start, tview_time_end;
@@ -90,48 +93,39 @@ public class ReproductorFragment extends Fragment {
                 ReproductorFragment.SP_REPRODUCTOR_NAME, Context.MODE_PRIVATE
         );
 
-
-        DBSong dbSong = new DBSong(view.getContext());
-
         init_song(sharedPreferences, view);
         init_components(view);
         init_view(view);
 
-        DBCurrentPlaylist DBCurrentPlaylist = new DBCurrentPlaylist(view.getContext());
-        ArrayList<Integer> id_meadiaplayer_songs = dbCurrentPlaylist.get_id_meadiaplayer_songs();
-        // =====================================================================================
 
-
-        ArrayList<Uri> arrayList_uris = new ArrayList<>();
-
-        for (Integer id_song: id_meadiaplayer_songs) {
-            String uri_song = dbSong.get_uri(id_song); // get path each song
-            arrayList_uris.add(Uri.parse(uri_song)); // get uri each song && put thi in array_list
-        }
-
-        int id_current_song = DBCurrentPlaylist.get_IDSONG_on_CURRENTPLAYLIST_by_IDSONGMEDIAPLAYER(song.getId());
-        
-
-        // =====================================================================================
-
-
+        DBSong dbSong = new DBSong(view.getContext());
         String uri_song = dbSong.get_uri(song.getId());
-
         mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
 
         init_control_play(view);
         init_control_pause(view);
         init_control_netxt(view);
 
-
-
         return view;
     }
 
-    private void init_control_netxt(View view) {
+    private void init_control_netxt(final View view) {
         iView_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DBSong dbSong = new DBSong(view.getContext());
+
+                DBCurrentPlaylist dbCurrentPlaylist = new DBCurrentPlaylist(view.getContext());
+
+                int id_current_song = dbCurrentPlaylist.get_IDSONG_on_CURRENTPLAYLIST_by_IDSONGMEDIAPLAYER(song.getId());
+                int id_sig_idSongMediaPlayer = dbCurrentPlaylist.get_IDSONGMEDIAPLAYER_by_IDSONG(id_current_song + 1);
+
+                if (id_sig_idSongMediaPlayer > -1) {
+                    String uri_song = dbSong.get_uri(id_sig_idSongMediaPlayer); // get path each song
+                    mediaPlayer.stop();
+                    mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
+                    mediaPlayer.start();
+                }
 
             }
         });
@@ -183,7 +177,7 @@ public class ReproductorFragment extends Fragment {
         });
     }
 
-    private void init_song(SharedPreferences sharedPreferences,  View view) {
+    private void init_song(SharedPreferences sharedPreferences, View view) {
 
         String song_id = sharedPreferences.getString("song_id", "");
         String playlist_id = sharedPreferences.getString("playlist_id", "");
