@@ -75,10 +75,30 @@ public class DBCurrentPlaylist extends DB {
 
             id_insert = sqLiteDatabase.insert(DB.CURRENT_PLAYLIST, null, contentValues);
 
-
         } catch (Exception ex) {
             Log.e("[insert_id_song]", ex.toString());
         }
     }
 
+    public int get_IDSONG_on_CURRENTPLAYLIST_by_IDSONGMEDIAPLAYER(final Integer ID_SONG_MEDIAPLAYER){
+        int id_song = -1;
+
+        try{
+            DB db = new DB(this.context);
+            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+
+            Cursor cursor = sqLiteDatabase.rawQuery(
+                    "SELECT *" +
+                            " FROM " + DB.CURRENT_PLAYLIST +
+                            " WHERE " + DB.CURRENT_PLAYLIST_ID__SONG_MEDIAPLAYER + " = " + Integer.toString(ID_SONG_MEDIAPLAYER),
+                    null);
+
+            id_song = cursor.getInt(0);
+
+        } catch (Exception ex) {
+            Log.e("[get_CURRENT_PLAYLIST_ID_SONG]", ex.toString());
+        }
+
+        return id_song;
+    }
 }

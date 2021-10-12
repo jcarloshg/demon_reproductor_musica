@@ -90,14 +90,31 @@ public class ReproductorFragment extends Fragment {
                 ReproductorFragment.SP_REPRODUCTOR_NAME, Context.MODE_PRIVATE
         );
 
+
+        DBSong dbSong = new DBSong(view.getContext());
+
         init_song(sharedPreferences, view);
         init_components(view);
         init_view(view);
 
-        DBCurrentPlaylist dbCurrentPlaylist = new DBCurrentPlaylist(view.getContext());
+        DBCurrentPlaylist DBCurrentPlaylist = new DBCurrentPlaylist(view.getContext());
         ArrayList<Integer> id_meadiaplayer_songs = dbCurrentPlaylist.get_id_meadiaplayer_songs();
+        // =====================================================================================
 
-        DBSong dbSong = new DBSong(view.getContext());
+
+        ArrayList<Uri> arrayList_uris = new ArrayList<>();
+
+        for (Integer id_song: id_meadiaplayer_songs) {
+            String uri_song = dbSong.get_uri(id_song); // get path each song
+            arrayList_uris.add(Uri.parse(uri_song)); // get uri each song && put thi in array_list
+        }
+
+        int id_current_song = DBCurrentPlaylist.get_IDSONG_on_CURRENTPLAYLIST_by_IDSONGMEDIAPLAYER(song.getId());
+        
+
+        // =====================================================================================
+
+
         String uri_song = dbSong.get_uri(song.getId());
 
         mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
@@ -115,7 +132,7 @@ public class ReproductorFragment extends Fragment {
         iView_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
             }
         });
     }
