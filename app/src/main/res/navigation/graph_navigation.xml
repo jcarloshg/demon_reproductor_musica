@@ -18,7 +18,11 @@
         android:id="@+id/nav_reproductor"
         android:name="com.example.demonreproductormusica.ReproductorFragment"
         android:label="fragment_reproductor"
-        tools:layout="@layout/fragment_reproductor" />
+        tools:layout="@layout/fragment_reproductor" >
+        <action
+            android:id="@+id/action_nav_reproductor_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.example.demonreproductormusica.PlaylistFragment"

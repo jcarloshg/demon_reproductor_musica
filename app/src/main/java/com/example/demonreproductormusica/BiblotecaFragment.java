@@ -20,9 +20,9 @@ import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.demonreproductormusica.adaptadores.ListItemAdapter;
-import com.example.demonreproductormusica.db.DBPlaylist;
-import com.example.demonreproductormusica.entidades.ListItem;
+import com.example.demonreproductormusica.adaptadores.*;
+import com.example.demonreproductormusica.db.*;
+import com.example.demonreproductormusica.entidades.*;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;

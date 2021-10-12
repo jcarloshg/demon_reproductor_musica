@@ -15,6 +15,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import com.example.demonreproductormusica.db.DBCurrentPlaylist;
 import com.example.demonreproductormusica.db.DBSong;
@@ -43,7 +45,7 @@ public class ReproductorFragment extends Fragment {
 
     // VIEW
     TextView tView_name, tView_artist, tview_time_start, tview_time_end;
-    ImageView iView_play, iView_next, iView_previous, iView_pause;
+    ImageView iView_play, iView_next, iView_previous, iView_pause, iView_current_playlist;
     private SeekBar seekBar;
     MediaPlayer mediaPlayer;
 
@@ -81,6 +83,8 @@ public class ReproductorFragment extends Fragment {
 
         tview_time_start = view.findViewById(R.id.tview_time_start);
         tview_time_end = view.findViewById(R.id.tview_time_end);
+
+        iView_current_playlist = view.findViewById(R.id.iView_current_playlist);
     }
 
     @Override
@@ -103,7 +107,22 @@ public class ReproductorFragment extends Fragment {
         init_control_netxt(view);
         init_control_previous(view);
 
+        init_iView_current_playlist_setOnClick();
+
         return view;
+    }
+
+    private void init_iView_current_playlist_setOnClick() {
+        iView_current_playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavDirections navDirections = ReproductorFragmentDirections.actionNavReproductorToPlaylistFragment(
+                        Integer.toString(song.getId_auxiliary()),
+                        PlaylistFragment.TYPE_ARTIST
+                );
+                Navigation.findNavController(view).navigate(navDirections);
+            }
+        });
     }
 
     private void set_sharedPreferences(View view, int id, int id_auxiliary) {
@@ -112,14 +131,14 @@ public class ReproductorFragment extends Fragment {
         );
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString("song_id", ""+id);
-        editor.putString("playlist_id",  ""+id_auxiliary);
+        editor.putString("song_id", "" + id);
+        editor.putString("playlist_id", "" + id_auxiliary);
         editor.apply();
     }
 
     // if is_pass is +1 past to next song
     // if is_pass is -1 past to previous song
-    private void change_song(View view, int is_pass){
+    private void change_song(View view, int is_pass) {
         DBSong dbSong = new DBSong(view.getContext());
         DBCurrentPlaylist dbCurrentPlaylist = new DBCurrentPlaylist(view.getContext());
 
@@ -256,7 +275,7 @@ public class ReproductorFragment extends Fragment {
 
 
             // show button play when the song is end
-            if (startTime == finalTime){
+            if (startTime == finalTime) {
                 iView_play.setVisibility(View.VISIBLE);
                 iView_pause.setVisibility(View.GONE);
             }
