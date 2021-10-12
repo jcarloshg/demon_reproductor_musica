@@ -76,7 +76,7 @@
             android:tint="#FFFFFF" />
 
         <ImageView
-            android:id="@+id/iView_play_next"
+            android:id="@+id/iView_next"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"

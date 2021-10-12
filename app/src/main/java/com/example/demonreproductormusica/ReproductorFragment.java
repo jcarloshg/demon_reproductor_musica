@@ -40,7 +40,7 @@ public class ReproductorFragment extends Fragment {
 
     // VIEW
     TextView tView_name, tView_artist, tview_time_start, tview_time_end;
-    ImageView iView_play, iView_play_next, iView_play_previous, iView_pause;
+    ImageView iView_play, iView_next, iView_previous, iView_pause;
     private SeekBar seekBar;
     MediaPlayer mediaPlayer;
 
@@ -73,8 +73,8 @@ public class ReproductorFragment extends Fragment {
 
         iView_play = view.findViewById(R.id.iView_play);
         iView_pause = view.findViewById(R.id.iView_pause);
-        iView_play_next = view.findViewById(R.id.iView_play_next);
-        iView_play_previous = view.findViewById(R.id.iView_play_previous);
+        iView_next = view.findViewById(R.id.iView_next);
+        iView_previous = view.findViewById(R.id.iView_play_previous);
 
         tview_time_start = view.findViewById(R.id.tview_time_start);
         tview_time_end = view.findViewById(R.id.tview_time_end);
@@ -102,6 +102,36 @@ public class ReproductorFragment extends Fragment {
 
         mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
 
+        init_control_play(view);
+        init_control_pause(view);
+        init_control_netxt(view);
+
+
+
+        return view;
+    }
+
+    private void init_control_netxt(View view) {
+        iView_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+    }
+
+    private void init_control_pause(View view) {
+        iView_pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.pause();
+                iView_play.setVisibility(View.VISIBLE);
+                iView_pause.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void init_control_play(View view) {
         iView_play.setVisibility(View.VISIBLE);
         iView_pause.setVisibility(View.GONE);
 
@@ -134,18 +164,6 @@ public class ReproductorFragment extends Fragment {
                 myHandler.postDelayed(UpdateSongTime, 100);
             }
         });
-
-
-        iView_pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer.pause();
-                iView_play.setVisibility(View.VISIBLE);
-                iView_pause.setVisibility(View.GONE);
-            }
-        });
-
-        return view;
     }
 
     private void init_song(SharedPreferences sharedPreferences,  View view) {
