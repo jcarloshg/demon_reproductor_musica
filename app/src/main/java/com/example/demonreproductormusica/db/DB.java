@@ -22,7 +22,6 @@ public class DB extends SQLiteOpenHelper {
     public static final String PLAYLIST_COLUMN_ID = "id";
     public static final String PLAYLIST_COLUMN_NAME = "name";
 
-
     // COLUMN NAME <CURRENT_PLAYLIST>
     public static final String CURRENT_PLAYLIST_ID_SONG = "CURRENT_PLAYLIST_ID_SONG";
     public static final String CURRENT_PLAYLIST_ID__SONG_MEDIAPLAYER = "CURRENT_PLAYLIST_ID__SONG_MEDIAPLAYER";
@@ -44,7 +43,7 @@ public class DB extends SQLiteOpenHelper {
     public DB(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.DATABASE_PATH = "/data/data/" + context.getPackageName() + "/databases/";
-        Log.d("[DATA_BASE]", "path: " + DATABASE_PATH);
+        // Log.d("[DATA_BASE]", "path: " + DATABASE_PATH);
     }
 
     @Override

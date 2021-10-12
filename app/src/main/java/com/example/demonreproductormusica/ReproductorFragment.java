@@ -17,9 +17,12 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.demonreproductormusica.db.DB;
+import com.example.demonreproductormusica.db.DBCurrentPlaylist;
 import com.example.demonreproductormusica.db.DBSong;
 import com.example.demonreproductormusica.entidades.ListItem;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -91,8 +94,8 @@ public class ReproductorFragment extends Fragment {
         String song_id = sharedPreferences.getString("song_id", "");
         String playlist_id = sharedPreferences.getString("playlist_id", "");
 
-
-        Log.i("[onCreateView REPRODUCTOR]", "" + song_id + " " + playlist_id);
+        DBCurrentPlaylist dbCurrentPlaylist = new DBCurrentPlaylist(view.getContext());
+        ArrayList<Integer> id_meadiaplayer_songs = dbCurrentPlaylist.get_id_meadiaplayer_songs();
 
         /*reproductorFragmentArgs = ReproductorFragmentArgs.fromBundle(getArguments());
         init_song(reproductorFragmentArgs, view);

@@ -20,6 +20,7 @@ import com.example.demonreproductormusica.BiblotecaFragmentDirections;
 import com.example.demonreproductormusica.PlaylistFragment;
 import com.example.demonreproductormusica.R;
 import com.example.demonreproductormusica.ReproductorFragment;
+import com.example.demonreproductormusica.db.DBCurrentPlaylist;
 import com.example.demonreproductormusica.db.DBPlaylist;
 import com.example.demonreproductormusica.db.DBPlaylistSong;
 import com.example.demonreproductormusica.entidades.ListItem;
@@ -129,6 +130,21 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         editor.putString("playlist_id", Integer.toString(listItem.getId_auxiliary()));
         editor.apply();
 
+        // get id_sogn of playlist
+        DBPlaylistSong  dbPlaylistSong = new DBPlaylistSong(itemView.getContext());
+        ArrayList<Integer> id_song_playlist = dbPlaylistSong.get_uri_songs_of_playlist(
+                listItem.getId_auxiliary()
+        );
+
+        DBCurrentPlaylist dbCurrentPlaylist = new DBCurrentPlaylist(itemView.getContext());
+
+        dbCurrentPlaylist.delete_from_currentplaylist(); // deleete all rows
+
+        // insert id_song of mediaPlayer in current_playlist
+        for (Integer id_song_mediaplayer: id_song_playlist) {
+            dbCurrentPlaylist.insert_id_song(id_song_mediaplayer);
+        }
+
         Navigation.findNavController(itemView).navigate(R.id.action_playlistFragment_to_nav_reproductor);
 
 /*        NavDirections navDirections = PlaylistFragmentDirections.actionPlaylistFragmentToNavReproductor2(
@@ -194,6 +210,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         ArrayList<ListItem> arrayList = new DBPlaylist(itemView.getContext()).get_all_laylist();
         for (ListItem item : arrayList) { // sets the TYPE and the id song that called the modal
             item.setTYPE(ListItem.ITEM_PLAYLIST_VIEW);
+            // a cada playlist le pasamos el id de la canción que llamo esta accion.
             item.setId_auxiliary(listItem.getId());
         }
         recyclerViewItems.setAdapter(new ListItemAdapter(arrayList));

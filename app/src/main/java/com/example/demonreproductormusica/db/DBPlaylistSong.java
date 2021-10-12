@@ -1,15 +1,10 @@
 package com.example.demonreproductormusica.db;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -64,6 +59,32 @@ public class DBPlaylistSong extends DB {
         }
 
         return playlist;
+    }
+
+    public ArrayList<Integer> get_uri_songs_of_playlist(int id_playlist){
+
+        DB db = new DB(this.context);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+        ArrayList<Integer> id_song_playlist = new ArrayList<>();
+
+        try {
+            Cursor cursor_TABLE_PLAYLIST_SONG = sqLiteDatabase.rawQuery(
+                    "SELECT *" +
+                            " FROM " + DB.TABLE_PLAYLIST_SONG +
+                            " WHERE " + DB.PLAYLIST_SONG_COLUMN_ID_PLAYLIST + " = " + Integer.toString(id_playlist),
+                    null);
+
+            if (cursor_TABLE_PLAYLIST_SONG.moveToFirst()) {
+                do {
+                    int id_song = cursor_TABLE_PLAYLIST_SONG.getInt(1);
+                    id_song_playlist.add(id_song);
+                } while (cursor_TABLE_PLAYLIST_SONG.moveToNext());
+            }
+        }catch (Exception ex) {
+            Log.e("[get_uri_songs_of_playlist DBPlaylistSong] ", ex.toString());
+        }
+
+        return id_song_playlist;
     }
 
     public void view_all_elements() {

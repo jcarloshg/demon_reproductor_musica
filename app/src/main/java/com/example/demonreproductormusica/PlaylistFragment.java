@@ -93,7 +93,7 @@ public class PlaylistFragment extends Fragment {
 
         // assign auxiliary id and type for actions
         for (ListItem item: playlist) {
-            Log.i("[NAME_SONG]", "init_view: " + item);
+            Log.i("[PlaylistFragment + NAME_SONG]", "init_view: " + item);
             item.setId_auxiliary(playlist_info.getId());
             item.setTYPE(ListItem.ITEM_SONG_LIST);
         }
