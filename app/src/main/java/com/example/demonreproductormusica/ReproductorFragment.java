@@ -89,13 +89,10 @@ public class ReproductorFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_reproductor, container, false);
 
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(
-                ReproductorFragment.SP_REPRODUCTOR_NAME, Context.MODE_PRIVATE
-        );
 
-        init_song(sharedPreferences, view);
+        init_song(view);
         init_components(view);
-        init_view(view);
+        update_view(view);
 
 
         DBSong dbSong = new DBSong(view.getContext());
@@ -107,6 +104,18 @@ public class ReproductorFragment extends Fragment {
         init_control_netxt(view);
 
         return view;
+    }
+
+
+    private void set_sharedPreferences(View view, int id, int id_auxiliary) {
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(
+                ReproductorFragment.SP_REPRODUCTOR_NAME, Context.MODE_PRIVATE
+        );
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString("song_id", ""+id);
+        editor.putString("playlist_id",  ""+id_auxiliary);
+        editor.apply();
     }
 
     private void init_control_netxt(final View view) {
@@ -122,6 +131,15 @@ public class ReproductorFragment extends Fragment {
 
                 if (id_sig_idSongMediaPlayer > -1) {
                     String uri_song = dbSong.get_uri(id_sig_idSongMediaPlayer); // get path each song
+
+                    // establecemos que canción es la actua y que playlist es la actual
+                    set_sharedPreferences(view, id_sig_idSongMediaPlayer, song.getId_auxiliary());
+
+                    // update current song
+                    song = get_song_by_idmediaplayer(view, id_sig_idSongMediaPlayer, song.getId_auxiliary());
+
+                    update_view(view);
+
                     mediaPlayer.stop();
                     mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
                     mediaPlayer.start();
@@ -177,18 +195,29 @@ public class ReproductorFragment extends Fragment {
         });
     }
 
-    private void init_song(SharedPreferences sharedPreferences, View view) {
+
+
+    private void init_song(View view) {
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(
+                ReproductorFragment.SP_REPRODUCTOR_NAME, Context.MODE_PRIVATE
+        );
 
         String song_id = sharedPreferences.getString("song_id", "");
         String playlist_id = sharedPreferences.getString("playlist_id", "");
 
-        DBSong dbSong = new DBSong(view.getContext());
-        song = dbSong.get_song_by_id(Integer.valueOf(song_id));
-        song.setId_auxiliary(Integer.valueOf(playlist_id));
-        // missing assign the TYPE to
+        song = get_song_by_idmediaplayer(view, Integer.valueOf(song_id), Integer.valueOf(playlist_id));
     }
 
-    private void init_view(View view) {
+    private ListItem get_song_by_idmediaplayer(View view, Integer song_id, Integer playlist_id) {
+        DBSong dbSong = new DBSong(view.getContext());
+        ListItem aux_song = dbSong.get_song_by_id(song_id);
+        aux_song.setId_auxiliary(Integer.valueOf(playlist_id));
+        // missing assign the TYPE to
+
+        return aux_song;
+    }
+
+    private void update_view(View view) {
         tView_name.setText(song.getTitle());
         tView_artist.setText(song.getSubtitle());
     }

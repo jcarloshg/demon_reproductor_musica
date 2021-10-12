@@ -17,13 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demonreproductormusica.BiblotecaFragmentDirections;
-import com.example.demonreproductormusica.PlaylistFragment;
+import com.example.demonreproductormusica.*;
 import com.example.demonreproductormusica.R;
 import com.example.demonreproductormusica.ReproductorFragment;
 import com.example.demonreproductormusica.db.DBCurrentPlaylist;
-import com.example.demonreproductormusica.db.DBPlaylist;
-import com.example.demonreproductormusica.db.DBPlaylistSong;
-import com.example.demonreproductormusica.entidades.ListItem;
+import com.example.demonreproductormusica.db.*;
+import com.example.demonreproductormusica.entidades.*;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
