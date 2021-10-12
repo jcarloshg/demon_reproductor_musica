@@ -89,15 +89,14 @@ public class ReproductorFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_reproductor, container, false);
 
-
         init_song(view);
-        init_components(view);
-        update_view(view);
-
 
         DBSong dbSong = new DBSong(view.getContext());
         String uri_song = dbSong.get_uri(song.getId());
         mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
+
+        init_components(view);
+        update_view(view);
 
         init_control_play(view);
         init_control_pause(view);
@@ -138,11 +137,12 @@ public class ReproductorFragment extends Fragment {
                     // update current song
                     song = get_song_by_idmediaplayer(view, id_sig_idSongMediaPlayer, song.getId_auxiliary());
 
-                    update_view(view);
-
+                    // update media player
                     mediaPlayer.stop();
                     mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
                     mediaPlayer.start();
+
+                    update_view(view); // update_view
                 }
 
             }
@@ -160,7 +160,7 @@ public class ReproductorFragment extends Fragment {
         });
     }
 
-    private void init_control_play(View view) {
+    private void init_control_play(final View view) {
         iView_play.setVisibility(View.VISIBLE);
         iView_pause.setVisibility(View.GONE);
 
@@ -172,25 +172,7 @@ public class ReproductorFragment extends Fragment {
                 iView_play.setVisibility(View.GONE);
                 iView_pause.setVisibility(View.VISIBLE);
 
-                finalTime = mediaPlayer.getDuration();
-                startTime = mediaPlayer.getCurrentPosition();
-
-                tview_time_end.setText(String.format("%d:%d",
-                        TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
-                        TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-                                        finalTime)))
-                );
-
-                tview_time_start.setText(String.format("%d:%d",
-                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-                                        startTime)))
-                );
-
-                seekBar.setProgress((int) startTime);
-                myHandler.postDelayed(UpdateSongTime, 100);
+                update_view(view);
             }
         });
     }
@@ -218,8 +200,32 @@ public class ReproductorFragment extends Fragment {
     }
 
     private void update_view(View view) {
+
+        // update name && artist
         tView_name.setText(song.getTitle());
         tView_artist.setText(song.getSubtitle());
+
+        // update seekBar
+        finalTime = mediaPlayer.getDuration();
+        startTime = mediaPlayer.getCurrentPosition();
+
+        tview_time_end.setText(String.format("%d:%d",
+                TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
+                TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                finalTime)))
+        );
+
+        tview_time_start.setText(String.format("%d:%d",
+                TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                startTime)))
+        );
+
+        seekBar.setProgress((int) startTime);
+        myHandler.postDelayed(UpdateSongTime, 100);
+
     }
 
     private Runnable UpdateSongTime = new Runnable() {
