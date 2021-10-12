@@ -23,6 +23,7 @@ import com.example.demonreproductormusica.ReproductorFragment;
 import com.example.demonreproductormusica.db.DBCurrentPlaylist;
 import com.example.demonreproductormusica.db.*;
 import com.example.demonreproductormusica.entidades.*;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;

@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +65,28 @@ public class ReproductorFragment extends Fragment {
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.i("[ReproductorFragment]", "onResume: " + "dfkjshdfkjlhsdfkjdlkfsdjkfhk");
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("{onDestroy}", "onDestroy: " + "dfslkdfjsdsñlldfjsdjflsdfjñlfjldjfñldjflñdjñldkfjsñldfkj");
+        if (mediaPlayer != null) {
+            myHandler.removeCallbacks(UpdateSongTime);
+            mediaPlayer.release();
+
+        }
     }
 
     private void init_components(View view) {
@@ -121,6 +141,8 @@ public class ReproductorFragment extends Fragment {
                         PlaylistFragment.TYPE_ARTIST
                 );
                 Navigation.findNavController(view).navigate(navDirections);
+
+                Log.i("[init_iView_current_playlist_setOnClick]", "ñsldfjsñldfj");
             }
         });
     }
