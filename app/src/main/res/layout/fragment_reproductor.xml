@@ -54,14 +54,15 @@
             android:tint="@color/white" />
 
         <ImageView
-            android:id="@+id/iView_play_pause"
+            android:id="@+id/iView_play"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_play"
-            android:tint="@color/white"
-            app:srcCompat="@drawable/ic_play" />
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_play_circle"
+            android:tint="#FFFFFF" />
 
         <ImageView
             android:id="@+id/iView_pause"
@@ -70,9 +71,9 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="16dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_play"
-            android:tint="@color/white"
-            app:srcCompat="@drawable/ic_baseline_pause_24" />
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_baseline_pause_24"
+            android:tint="#FFFFFF" />
 
         <ImageView
             android:id="@+id/iView_play_next"
@@ -124,7 +125,7 @@
             android:id="@+id/tView_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Remember Everythiing"
+            android:text="[NAME_SONG]"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -133,7 +134,7 @@
             android:id="@+id/tView_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Five Finger Death Punche"
+            android:text="[NAME_ARTIST]"
             android:textColor="@color/white" />
     </LinearLayout>
 

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.demonreproductormusica.db.DB;
 import com.example.demonreproductormusica.db.DBCurrentPlaylist;
 import com.example.demonreproductormusica.db.DBSong;
 import com.example.demonreproductormusica.entidades.ListItem;
@@ -37,12 +35,12 @@ public class ReproductorFragment extends Fragment {
     public static final String SP_REPRODUCTOR_ID_SONG = "SP_REPRODUCTOR_ID_SONG";
     public static final String SP_REPRODUCTOR_ID_PLAYLIST = "SP_REPRODUCTOR_ID_PLAYLIST";
 
-    // }ReproductorFragmentArgs reproductorFragmentArgs;
+    // ReproductorFragmentArgs reproductorFragmentArgs;
     ListItem song;
 
     // VIEW
     TextView tView_name, tView_artist, tview_time_start, tview_time_end;
-    ImageView iView_play_pause, iView_play_next, iView_play_previous, iView_pause;
+    ImageView iView_play, iView_play_next, iView_play_previous, iView_pause;
     private SeekBar seekBar;
     MediaPlayer mediaPlayer;
 
@@ -73,7 +71,7 @@ public class ReproductorFragment extends Fragment {
         seekBar = view.findViewById(R.id.seekBar);
         seekBar.setClickable(false);
 
-        iView_play_pause = view.findViewById(R.id.iView_play_pause);
+        iView_play = view.findViewById(R.id.iView_play);
         iView_pause = view.findViewById(R.id.iView_pause);
         iView_play_next = view.findViewById(R.id.iView_play_next);
         iView_play_previous = view.findViewById(R.id.iView_play_previous);
@@ -91,33 +89,29 @@ public class ReproductorFragment extends Fragment {
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(
                 ReproductorFragment.SP_REPRODUCTOR_NAME, Context.MODE_PRIVATE
         );
-        String song_id = sharedPreferences.getString("song_id", "");
-        String playlist_id = sharedPreferences.getString("playlist_id", "");
+
+        init_song(sharedPreferences, view);
+        init_components(view);
+        init_view(view);
 
         DBCurrentPlaylist dbCurrentPlaylist = new DBCurrentPlaylist(view.getContext());
         ArrayList<Integer> id_meadiaplayer_songs = dbCurrentPlaylist.get_id_meadiaplayer_songs();
-
-        /*reproductorFragmentArgs = ReproductorFragmentArgs.fromBundle(getArguments());
-        init_song(reproductorFragmentArgs, view);
-        init_components(view);
-        init_view(view);
 
         DBSong dbSong = new DBSong(view.getContext());
         String uri_song = dbSong.get_uri(song.getId());
 
         mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
 
-        iView_play_pause.setVisibility(View.VISIBLE);
+        iView_play.setVisibility(View.VISIBLE);
         iView_pause.setVisibility(View.GONE);
 
-        iView_play_pause.setOnClickListener(new View.OnClickListener() {
+        iView_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 mediaPlayer.start();
-                iView_play_pause.setVisibility(View.GONE);
+                iView_play.setVisibility(View.GONE);
                 iView_pause.setVisibility(View.VISIBLE);
-
 
                 finalTime = mediaPlayer.getDuration();
                 startTime = mediaPlayer.getCurrentPosition();
@@ -146,21 +140,24 @@ public class ReproductorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mediaPlayer.pause();
-                iView_play_pause.setVisibility(View.VISIBLE);
+                iView_play.setVisibility(View.VISIBLE);
                 iView_pause.setVisibility(View.GONE);
             }
-
-        });*/
+        });
 
         return view;
     }
 
-/*    private void init_song(ReproductorFragmentArgs reproductorFragmentArgs, View view) {
+    private void init_song(SharedPreferences sharedPreferences,  View view) {
+
+        String song_id = sharedPreferences.getString("song_id", "");
+        String playlist_id = sharedPreferences.getString("playlist_id", "");
+
         DBSong dbSong = new DBSong(view.getContext());
-        song = dbSong.get_song_by_id(Integer.valueOf(reproductorFragmentArgs.getIdSong()));
-        song.setId_auxiliary(Integer.valueOf(reproductorFragmentArgs.getIdPlaylist()));
+        song = dbSong.get_song_by_id(Integer.valueOf(song_id));
+        song.setId_auxiliary(Integer.valueOf(playlist_id));
         // missing assign the TYPE to
-    }*/
+    }
 
     private void init_view(View view) {
         tView_name.setText(song.getTitle());

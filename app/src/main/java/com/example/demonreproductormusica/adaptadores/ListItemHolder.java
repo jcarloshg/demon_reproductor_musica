@@ -126,32 +126,27 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         );
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        // establecemos que canción es la actua y que playlist es la actual
         editor.putString("song_id", Integer.toString(listItem.getId()));
         editor.putString("playlist_id", Integer.toString(listItem.getId_auxiliary()));
         editor.apply();
 
-        // get id_sogn of playlist
+        //===========================================
+        // process to put the new current playlist
+        // 1 - get id_sogn of playlist
         DBPlaylistSong  dbPlaylistSong = new DBPlaylistSong(itemView.getContext());
-        ArrayList<Integer> id_song_playlist = dbPlaylistSong.get_uri_songs_of_playlist(
-                listItem.getId_auxiliary()
+        ArrayList<Integer> id_song_playlist = dbPlaylistSong.get_id_songs_of_playlist(
+                listItem.getId_auxiliary() // its the id playlist,
         );
-
         DBCurrentPlaylist dbCurrentPlaylist = new DBCurrentPlaylist(itemView.getContext());
-
-        dbCurrentPlaylist.delete_from_currentplaylist(); // deleete all rows
-
-        // insert id_song of mediaPlayer in current_playlist
+        // 2 - delete current playlist
+        dbCurrentPlaylist.delete_from_currentplaylist();
+        // 3 - insert the new current_playlist
         for (Integer id_song_mediaplayer: id_song_playlist) {
             dbCurrentPlaylist.insert_id_mediaplayer_song(id_song_mediaplayer);
         }
 
         Navigation.findNavController(itemView).navigate(R.id.action_playlistFragment_to_nav_reproductor);
-
-/*        NavDirections navDirections = PlaylistFragmentDirections.actionPlaylistFragmentToNavReproductor2(
-                Integer.toString(listItem.getId()),
-                Integer.toString(listItem.getId_auxiliary())
-        );
-        Navigation.findNavController(itemView).navigate(navDirections);*/
     }
 
     public void navigate_to_playlist(View v) {

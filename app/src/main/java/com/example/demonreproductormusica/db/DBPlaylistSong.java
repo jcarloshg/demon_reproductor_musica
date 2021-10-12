@@ -61,7 +61,7 @@ public class DBPlaylistSong extends DB {
         return playlist;
     }
 
-    public ArrayList<Integer> get_uri_songs_of_playlist(int id_playlist){
+    public ArrayList<Integer> get_id_songs_of_playlist(int id_playlist){
 
         DB db = new DB(this.context);
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
