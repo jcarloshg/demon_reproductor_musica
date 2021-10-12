@@ -101,10 +101,10 @@ public class ReproductorFragment extends Fragment {
         init_control_play(view);
         init_control_pause(view);
         init_control_netxt(view);
+        init_control_previous(view);
 
         return view;
     }
-
 
     private void set_sharedPreferences(View view, int id, int id_auxiliary) {
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(
@@ -117,34 +117,48 @@ public class ReproductorFragment extends Fragment {
         editor.apply();
     }
 
+    // if is_pass is +1 past to next song
+    // if is_pass is -1 past to previous song
+    private void change_song(View view, int is_pass){
+        DBSong dbSong = new DBSong(view.getContext());
+        DBCurrentPlaylist dbCurrentPlaylist = new DBCurrentPlaylist(view.getContext());
+
+        int id_current_song = dbCurrentPlaylist.get_IDSONG_on_CURRENTPLAYLIST_by_IDSONGMEDIAPLAYER(song.getId());
+        int id_sig_idSongMediaPlayer = dbCurrentPlaylist.get_IDSONGMEDIAPLAYER_by_IDSONG(id_current_song + is_pass);
+
+        if (id_sig_idSongMediaPlayer > -1) {
+            String uri_song = dbSong.get_uri(id_sig_idSongMediaPlayer); // get path each song
+
+            // establecemos que canción es la actua y que playlist es la actual
+            set_sharedPreferences(view, id_sig_idSongMediaPlayer, song.getId_auxiliary());
+
+            // update current song
+            song = get_song_by_idmediaplayer(view, id_sig_idSongMediaPlayer, song.getId_auxiliary());
+
+            // update media player
+            mediaPlayer.stop();
+            mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
+            mediaPlayer.start();
+
+            update_view(view); // update_view
+        }
+
+    }
+
+    private void init_control_previous(View view) {
+        iView_previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                change_song(view, -1);
+            }
+        });
+    }
+
     private void init_control_netxt(final View view) {
         iView_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBSong dbSong = new DBSong(view.getContext());
-
-                DBCurrentPlaylist dbCurrentPlaylist = new DBCurrentPlaylist(view.getContext());
-
-                int id_current_song = dbCurrentPlaylist.get_IDSONG_on_CURRENTPLAYLIST_by_IDSONGMEDIAPLAYER(song.getId());
-                int id_sig_idSongMediaPlayer = dbCurrentPlaylist.get_IDSONGMEDIAPLAYER_by_IDSONG(id_current_song + 1);
-
-                if (id_sig_idSongMediaPlayer > -1) {
-                    String uri_song = dbSong.get_uri(id_sig_idSongMediaPlayer); // get path each song
-
-                    // establecemos que canción es la actua y que playlist es la actual
-                    set_sharedPreferences(view, id_sig_idSongMediaPlayer, song.getId_auxiliary());
-
-                    // update current song
-                    song = get_song_by_idmediaplayer(view, id_sig_idSongMediaPlayer, song.getId_auxiliary());
-
-                    // update media player
-                    mediaPlayer.stop();
-                    mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(uri_song));
-                    mediaPlayer.start();
-
-                    update_view(view); // update_view
-                }
-
+                change_song(view, 1);
             }
         });
     }
@@ -177,9 +191,8 @@ public class ReproductorFragment extends Fragment {
         });
     }
 
-
-
     private void init_song(View view) {
+
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(
                 ReproductorFragment.SP_REPRODUCTOR_NAME, Context.MODE_PRIVATE
         );
@@ -231,6 +244,8 @@ public class ReproductorFragment extends Fragment {
     private Runnable UpdateSongTime = new Runnable() {
         public void run() {
             startTime = mediaPlayer.getCurrentPosition();
+            finalTime = mediaPlayer.getDuration();
+
             tview_time_start.setText(String.format("%d:%d",
                     TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                     TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
@@ -238,7 +253,16 @@ public class ReproductorFragment extends Fragment {
                                     toMinutes((long) startTime)))
             );
             seekBar.setProgress((int) startTime);
+
+
+            // show button play when the song is end
+            if (startTime == finalTime){
+                iView_play.setVisibility(View.VISIBLE);
+                iView_pause.setVisibility(View.GONE);
+            }
+
             myHandler.postDelayed(this, 100);
+
         }
     };
 
