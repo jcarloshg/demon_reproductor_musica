@@ -142,7 +142,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
         // insert id_song of mediaPlayer in current_playlist
         for (Integer id_song_mediaplayer: id_song_playlist) {
-            dbCurrentPlaylist.insert_id_song(id_song_mediaplayer);
+            dbCurrentPlaylist.insert_id_mediaplayer_song(id_song_mediaplayer);
         }
 
         Navigation.findNavController(itemView).navigate(R.id.action_playlistFragment_to_nav_reproductor);

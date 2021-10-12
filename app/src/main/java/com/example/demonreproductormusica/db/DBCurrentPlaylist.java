@@ -64,13 +64,17 @@ public class DBCurrentPlaylist extends DB {
 
     }
 
-    public void insert_id_song(int id_song) {
+    public void insert_id_mediaplayer_song(int id_song) {
+        long id_insert = -1;
+
         try {
-            DB db = new DB(this.context);
+            SQLiteDatabase sqLiteDatabase = new DB(this.context).getWritableDatabase();
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put(DB.PLAYLIST_SONG_COLUMN_ID_PLAYLIST, Integer.toString(id_song));
-            contentValues.put(DB.PLAYLIST_SONG_COLUMN_ID_SONG, Integer.toString(id_song));
+            contentValues.put(DB.CURRENT_PLAYLIST_ID__SONG_MEDIAPLAYER, Integer.toString(id_song));
+
+            id_insert = sqLiteDatabase.insert(DB.CURRENT_PLAYLIST, null, contentValues);
+
 
         } catch (Exception ex) {
             Log.e("[insert_id_song]", ex.toString());
