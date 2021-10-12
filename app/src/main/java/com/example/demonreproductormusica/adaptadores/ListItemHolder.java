@@ -1,5 +1,7 @@
 package com.example.demonreproductormusica.adaptadores;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,8 +11,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demonreproductormusica.BiblotecaFragmentDirections;
 import com.example.demonreproductormusica.PlaylistFragment;
-import com.example.demonreproductormusica.PlaylistFragmentDirections;
 import com.example.demonreproductormusica.R;
+import com.example.demonreproductormusica.ReproductorFragment;
 import com.example.demonreproductormusica.db.DBPlaylist;
 import com.example.demonreproductormusica.db.DBPlaylistSong;
 import com.example.demonreproductormusica.entidades.ListItem;
@@ -119,11 +119,23 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
     }
 
     private void navigate_to_reproductor(View itemView) {
-        NavDirections navDirections = PlaylistFragmentDirections.actionPlaylistFragmentToNavReproductor2(
+
+        SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(
+                ReproductorFragment.SP_REPRODUCTOR_NAME, Context.MODE_PRIVATE
+        );
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString("song_id", Integer.toString(listItem.getId()));
+        editor.putString("playlist_id", Integer.toString(listItem.getId_auxiliary()));
+        editor.apply();
+
+        Navigation.findNavController(itemView).navigate(R.id.action_playlistFragment_to_nav_reproductor);
+
+/*        NavDirections navDirections = PlaylistFragmentDirections.actionPlaylistFragmentToNavReproductor2(
                 Integer.toString(listItem.getId()),
                 Integer.toString(listItem.getId_auxiliary())
         );
-        Navigation.findNavController(itemView).navigate(navDirections);
+        Navigation.findNavController(itemView).navigate(navDirections);*/
     }
 
     public void navigate_to_playlist(View v) {

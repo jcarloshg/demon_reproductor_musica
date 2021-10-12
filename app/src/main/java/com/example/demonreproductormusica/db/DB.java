@@ -14,22 +14,27 @@ public class DB extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "demon.db";
     public static final String TABLE_PLAYLIST = "table_playlist";
+    public static final String CURRENT_PLAYLIST = "CURRENT_PLAYLIST";
     public static final String TABLE_SONGS = "table_song";
     public static final String TABLE_PLAYLIST_SONG = "table_playlist_song";
 
-
-    // COLUMN NAME TABLE_PLAYLIST
+    // COLUMN NAME <TABLE_PLAYLIST>
     public static final String PLAYLIST_COLUMN_ID = "id";
     public static final String PLAYLIST_COLUMN_NAME = "name";
 
-    // COLUMN NAME TABLE_SONGS
+
+    // COLUMN NAME <CURRENT_PLAYLIST>
+    public static final String CURRENT_PLAYLIST_ID_SONG = "CURRENT_PLAYLIST_ID_SONG";
+    public static final String CURRENT_PLAYLIST_ID__SONG_MEDIAPLAYER = "CURRENT_PLAYLIST_ID__SONG_MEDIAPLAYER";
+
+    // COLUMN NAME <TABLE_SONGS>
     public static final String SONGS_COLUMN_ID = "id";
     public static final String SONGS_COLUMN_NAME = "name";
     public static final String SONGS_COLUMN_ARTIST = "artist";
     public static final String SONGS_COLUMN_ALBUM = "album";
     public static final String SONGS_COLUMN_URI = "uri";
 
-    // COLUMN NAME TABLE_PLAYLIST_SONG
+    // COLUMN NAME <TABLE_PLAYLIST_SONG>
     public static final String PLAYLIST_SONG_COLUMN_ID_PLAYLIST = "id_playlist";
     public static final String PLAYLIST_SONG_COLUMN_ID_SONG = "id_song";
 
@@ -50,6 +55,14 @@ public class DB extends SQLiteOpenHelper {
                         " (" +
                         PLAYLIST_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         PLAYLIST_COLUMN_NAME + " TEXT NOT NULL " +
+                        ")"
+        );
+
+        db.execSQL(
+                "CREATE TABLE " + CURRENT_PLAYLIST +
+                        " (" +
+                        CURRENT_PLAYLIST_ID_SONG + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        CURRENT_PLAYLIST_ID__SONG_MEDIAPLAYER + " INTEGER NOT NULL " +
                         ")"
         );
 

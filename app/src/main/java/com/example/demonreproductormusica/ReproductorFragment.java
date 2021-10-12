@@ -1,5 +1,7 @@
 package com.example.demonreproductormusica;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +29,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class ReproductorFragment extends Fragment {
 
-    ReproductorFragmentArgs reproductorFragmentArgs;
+    // shared preferences
+    public static final String SP_REPRODUCTOR_NAME = "SP_REPRODUCTOR_NAME";
+    public static final String SP_REPRODUCTOR_ID_SONG = "SP_REPRODUCTOR_ID_SONG";
+    public static final String SP_REPRODUCTOR_ID_PLAYLIST = "SP_REPRODUCTOR_ID_PLAYLIST";
+
+    // }ReproductorFragmentArgs reproductorFragmentArgs;
     ListItem song;
 
     // VIEW
@@ -77,7 +85,16 @@ public class ReproductorFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_reproductor, container, false);
 
-        reproductorFragmentArgs = ReproductorFragmentArgs.fromBundle(getArguments());
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(
+                ReproductorFragment.SP_REPRODUCTOR_NAME, Context.MODE_PRIVATE
+        );
+        String song_id = sharedPreferences.getString("song_id", "");
+        String playlist_id = sharedPreferences.getString("playlist_id", "");
+
+
+        Log.i("[onCreateView REPRODUCTOR]", "" + song_id + " " + playlist_id);
+
+        /*reproductorFragmentArgs = ReproductorFragmentArgs.fromBundle(getArguments());
         init_song(reproductorFragmentArgs, view);
         init_components(view);
         init_view(view);
@@ -130,17 +147,17 @@ public class ReproductorFragment extends Fragment {
                 iView_pause.setVisibility(View.GONE);
             }
 
-        });
+        });*/
 
         return view;
     }
 
-    private void init_song(ReproductorFragmentArgs reproductorFragmentArgs, View view) {
+/*    private void init_song(ReproductorFragmentArgs reproductorFragmentArgs, View view) {
         DBSong dbSong = new DBSong(view.getContext());
         song = dbSong.get_song_by_id(Integer.valueOf(reproductorFragmentArgs.getIdSong()));
         song.setId_auxiliary(Integer.valueOf(reproductorFragmentArgs.getIdPlaylist()));
         // missing assign the TYPE to
-    }
+    }*/
 
     private void init_view(View view) {
         tView_name.setText(song.getTitle());
