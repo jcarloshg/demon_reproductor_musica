@@ -46,8 +46,6 @@ public class BiblotecaFragment extends Fragment {
     Button btn_create_list;
     BottomSheetDialog bottomSheetDialog;
     EditText editText_name;
-    SearchView searchView;
-    Button get_songs, button_playlist;
 
     // elements of view Library
     RecyclerView recyclerViewItems;
@@ -58,9 +56,12 @@ public class BiblotecaFragment extends Fragment {
     public static final String ALBUM = "ALBUM";
     public static final String ARTIST = "ARTIST";
     String search_by = PLAYLIST;
+    SearchView searchView;
+    Button get_songs, button_playlist, button_albums;
+
 
     @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_bibloteca, container, false);
@@ -124,6 +125,8 @@ public class BiblotecaFragment extends Fragment {
             }
         });
 
+        // ===================================================================================
+        // search by playlist
         button_playlist = view.findViewById(R.id.button_playlist);
         button_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,16 +138,30 @@ public class BiblotecaFragment extends Fragment {
             }
         });
 
+        button_albums = view.findViewById(R.id.button_albums);
+        button_albums.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search_by = ALBUM;
+                searchView.setQueryHint("Buscar playlist");
+                ListItemAdapter listItemAdapter = search_album(v, "");
+                recyclerViewItems.setAdapter(listItemAdapter);
+            }
+        });
+
         return view;
     }
 
-    private ListItemAdapter search(View view, String s){
+    private ListItemAdapter search(View view, String s) {
         ListItemAdapter listItemAdapter = null;
-        if (search_by.equals(SONG)){
+        if (search_by.equals(SONG)) {
             listItemAdapter = search_song(view, s);
         }
-        if (search_by.equals(PLAYLIST)){
+        if (search_by.equals(PLAYLIST)) {
             listItemAdapter = search_playlists(view, s);
+        }
+        if (search_by.equals(ALBUM)) {
+            listItemAdapter = search_album(view, s);
         }
 
         return listItemAdapter;
@@ -155,7 +172,24 @@ public class BiblotecaFragment extends Fragment {
         ArrayList<ListItem> songs = s.equals("")
                 ? dbSong.getAllFilesMp3()
                 : dbSong.get_song_by_name(s);
+
+        for (ListItem item : songs)
+            item.setTYPE(ListItem.ITEM_SONG_LIST);
+
         return new ListItemAdapter(songs);
+    }
+
+
+    private ListItemAdapter search_album(View v, String s) {
+        DBSong dbSong = new DBSong(v.getContext());
+        ArrayList<ListItem> albums = s.equals("")
+                ? dbSong.get_song_by_album()
+                : dbSong.get_song_by_albumName(s);
+
+        for (ListItem item : albums)
+            item.setTYPE(ListItem.ITEM_SONG_LIST);
+
+        return new ListItemAdapter(albums);
     }
 
     private ListItemAdapter search_playlists(View view, String s) {
@@ -163,6 +197,10 @@ public class BiblotecaFragment extends Fragment {
         ArrayList<ListItem> arrayList = s.equals("")
                 ? dbPlaylist.get_all_laylist() // ejecutamos query y btenemos resultado
                 : dbPlaylist.get_playlist_for_name(s);
+
+        for (ListItem item: arrayList) {
+            item.setTYPE(ListItem.ITEM_PLAYLIST_LIST);
+        }
 
         return new ListItemAdapter(arrayList);
     }
