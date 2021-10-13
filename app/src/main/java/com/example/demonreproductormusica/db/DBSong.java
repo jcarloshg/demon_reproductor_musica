@@ -38,6 +38,8 @@ public class DBSong extends DB {
             Toast.makeText(null, "no hay musica", Toast.LENGTH_SHORT).show();
         } else {
 
+
+
             int column_id = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int column_title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int column_album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
