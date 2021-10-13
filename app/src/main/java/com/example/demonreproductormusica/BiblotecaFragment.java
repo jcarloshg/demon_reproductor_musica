@@ -200,8 +200,9 @@ public class BiblotecaFragment extends Fragment {
                 ? dbSong.getAllFilesMp3()
                 : dbSong.get_song_by_name(s);
 
-        for (ListItem item : songs)
+        for (ListItem item : songs){
             item.setTYPE(ListItem.ITEM_SONG_LIST);
+        }
 
         return new ListItemAdapter(songs);
     }

@@ -1,6 +1,7 @@
 package com.example.demonreproductormusica.adaptadores;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -59,7 +61,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
         // menu flotante -> dependiendo del estado podremos abrir diferentes menus
         // https://stackoverflow.com/questions/27895108/nullpointerexception-attempt-to-invoke-virtual-method-boolean-java-lang-string
-        if (this.state_item != null && this.state_item.equals("ITEM_PLAYLIST_LIST")){
+        if (this.state_item != null && this.state_item.equals("ITEM_PLAYLIST_LIST")) {
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
             imageView.setImageResource(R.drawable.ic_baseline_playlist_play);
         }
@@ -68,11 +70,11 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
             init_state_ITEM_PLAYLIST_VIEW();
             imageView.setImageResource(R.drawable.ic_baseline_playlist_play);
         }
-        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST)){
+        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST)) {
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
             imageView.setImageResource(R.drawable.ic_reproductor);
         }
-        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_VIEW)){
+        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_VIEW)) {
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
             imageView.setImageResource(R.drawable.ic_reproductor);
         }
@@ -142,10 +144,11 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         editor.putString("playlist_id", Integer.toString(listItem.getId_auxiliary()));
         editor.apply();
 
+
         //===========================================
         // process to put the new current playlist
         // 1 - get id_sogn of playlist
-        DBPlaylistSong  dbPlaylistSong = new DBPlaylistSong(itemView.getContext());
+        DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(itemView.getContext());
         ArrayList<Integer> id_song_playlist = dbPlaylistSong.get_id_songs_of_playlist(
                 listItem.getId_auxiliary() // its the id playlist,
         );
@@ -153,11 +156,15 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         // 2 - delete current playlist
         dbCurrentPlaylist.delete_from_currentplaylist();
         // 3 - insert the new current_playlist
-        for (Integer id_song_mediaplayer: id_song_playlist) {
+        for (Integer id_song_mediaplayer : id_song_playlist) {
             dbCurrentPlaylist.insert_id_mediaplayer_song(id_song_mediaplayer);
         }
 
-        Navigation.findNavController(itemView).navigate(R.id.action_playlistFragment_to_nav_reproductor);
+        int id_action_navigate = (listItem.getId_auxiliary() == 0)
+                ? R.id.action_nav_bibloteca_to_nav_reproductor
+                : R.id.action_playlistFragment_to_nav_reproductor;
+
+        Navigation.findNavController(itemView).navigate(id_action_navigate);
     }
 
     public void navigate_to_playlist(View v) {
@@ -209,15 +216,29 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private void delete_playlist(View itemView, int id_playlist) {
-        DBPlaylist dbPlaylist = new DBPlaylist(itemView.getContext());
-        boolean is_remove_playlist = dbPlaylist.delete_playlist(id_playlist);
+    private void delete_playlist(final View itemView, final int id_playlist) {
 
-        String msg = (is_remove_playlist)
-                ? listItem.getTitle() + " playlist eliminada"
-                : listItem.getTitle() + " no se pudo eliminar playlist";
+        AlertDialog.Builder alertb = new AlertDialog.Builder(itemView.getContext());
+        alertb.setTitle("Borrar playlist");
+        alertb.setMessage("Unicamente la playlist será borrada, archivos de audio se conservan en el dispositivo. " +
+                "\n¿Seguro de realizar la acción?");
+        alertb.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-        Toast.makeText(itemView.getContext(), "" + msg, Toast.LENGTH_LONG).show();
+                DBPlaylist dbPlaylist = new DBPlaylist(itemView.getContext());
+                boolean is_remove_playlist = dbPlaylist.delete_playlist(id_playlist);
+
+                String msg = (is_remove_playlist)
+                        ? listItem.getTitle() + " playlist eliminada"
+                        : listItem.getTitle() + " no se pudo eliminar playlist";
+
+                Toast.makeText(itemView.getContext(), "" + msg, Toast.LENGTH_LONG).show();
+            }
+        });
+        alertb.setNegativeButton("Cancelar", null);
+        AlertDialog alertDialog = alertb.create();
+        alertDialog.show();
     }
 
     private void delete_song_from_platlist(View itemView, int id_platlist, int id_song) {
