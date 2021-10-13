@@ -57,7 +57,7 @@ public class BiblotecaFragment extends Fragment {
     public static final String ARTIST = "ARTIST";
     String search_by = PLAYLIST;
     SearchView searchView;
-    Button get_songs, button_playlist, button_albums;
+    Button get_songs, button_playlist, button_albums, button_artistas;
 
 
     @Override
@@ -149,6 +149,17 @@ public class BiblotecaFragment extends Fragment {
             }
         });
 
+        button_artistas = view.findViewById(R.id.button_artistas);
+        button_artistas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search_by = ARTIST;
+                searchView.setQueryHint("Buscar artistas");
+                ListItemAdapter listItemAdapter = search_artist(v, "");
+                recyclerViewItems.setAdapter(listItemAdapter);
+            }
+        });
+
         return view;
     }
 
@@ -163,8 +174,24 @@ public class BiblotecaFragment extends Fragment {
         if (search_by.equals(ALBUM)) {
             listItemAdapter = search_album(view, s);
         }
+        if (search_by.equals(ARTIST)) {
+            listItemAdapter = search_artist(view, s);
+        }
 
         return listItemAdapter;
+    }
+
+
+    private ListItemAdapter search_artist(View v, String s) {
+        DBSong dbSong = new DBSong(v.getContext());
+        ArrayList<ListItem> artist = s.equals("")
+                ? dbSong.get_song_by_artist()
+                : dbSong.get_song_by_artistName(s);
+
+        for (ListItem item : artist)
+            item.setTYPE(ListItem.ITEM_SONG_LIST);
+
+        return new ListItemAdapter(artist);
     }
 
     private ListItemAdapter search_song(View view, String s) {
@@ -178,7 +205,6 @@ public class BiblotecaFragment extends Fragment {
 
         return new ListItemAdapter(songs);
     }
-
 
     private ListItemAdapter search_album(View v, String s) {
         DBSong dbSong = new DBSong(v.getContext());

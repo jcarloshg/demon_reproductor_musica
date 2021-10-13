@@ -274,4 +274,107 @@ public class DBSong extends DB {
 
         return list;
     }
+
+    public ArrayList<ListItem> get_song_by_artist() {
+        ArrayList<ListItem> list = new ArrayList<>();
+
+        try {
+            ContentResolver contentResolver = context.getContentResolver();
+            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+            final String[] column_projection = new String[]{
+                    MediaStore.Audio.Media._ID,
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.ALBUM,
+                    MediaStore.Audio.Media.ARTIST
+            };
+            final String selection_column = MediaStore.Audio.Media.ARTIST + " LIKE ?";
+            final String[] selection_agr = new String[]{"%%"};
+
+            Cursor cursor_song = contentResolver.query(
+                    uri,
+                    column_projection,
+                    selection_column,
+                    selection_agr,
+                    "" +MediaStore.Audio.Media.ARTIST);
+
+            if (cursor_song == null) {
+                Toast.makeText(context, "algo salio mal :(", Toast.LENGTH_SHORT).show();
+            } else if (!cursor_song.moveToFirst()) {
+                Toast.makeText(context, "No existen artistas con ese nombre :(", Toast.LENGTH_SHORT).show();
+            } else {
+                do {
+                    int id = cursor_song.getInt(0);
+                    String name = cursor_song.getString(1);
+                    String album = cursor_song.getString(2);
+                    String artist = cursor_song.getString(3);
+
+                    ListItem listItem = new ListItem();
+                    listItem.setId(id);
+                    listItem.setTitle(name);
+                    listItem.setSubtitle(album + " | " + artist);
+                    ListItem song = listItem;
+
+                    list.add(song);
+
+                } while (cursor_song.moveToNext());
+            }
+        }catch (Exception ex) {
+            Log.e("[get_song_by_artist]", ex.toString());
+        }
+
+        return list;
+
+    }
+
+    public ArrayList<ListItem> get_song_by_artistName(String s) {
+        ArrayList<ListItem> list = new ArrayList<>();
+
+        try {
+            ContentResolver contentResolver = context.getContentResolver();
+            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+            final String[] column_projection = new String[]{
+                    MediaStore.Audio.Media._ID,
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.ALBUM,
+                    MediaStore.Audio.Media.ARTIST
+            };
+            final String selection_column = MediaStore.Audio.Media.ARTIST + " LIKE ?";
+            final String[] selection_agr = new String[]{"%"+s+"%"};
+
+            Cursor cursor_song = contentResolver.query(
+                    uri,
+                    column_projection,
+                    selection_column,
+                    selection_agr,
+                    "" +MediaStore.Audio.Media.ARTIST);
+
+            if (cursor_song == null) {
+                Toast.makeText(context, "algo salio mal :(", Toast.LENGTH_SHORT).show();
+            } else if (!cursor_song.moveToFirst()) {
+                Toast.makeText(context, "No existen artistas con ese nombre :(", Toast.LENGTH_SHORT).show();
+            } else {
+                do {
+                    int id = cursor_song.getInt(0);
+                    String name = cursor_song.getString(1);
+                    String album = cursor_song.getString(2);
+                    String artist = cursor_song.getString(3);
+
+                    ListItem listItem = new ListItem();
+                    listItem.setId(id);
+                    listItem.setTitle(name);
+                    listItem.setSubtitle(album + " | " + artist);
+                    ListItem song = listItem;
+
+                    list.add(song);
+
+                } while (cursor_song.moveToNext());
+            }
+        }catch (Exception ex) {
+            Log.e("[get_song_by_name]", ex.toString());
+        }
+
+        return list;
+    }
 }
