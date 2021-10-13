@@ -1,17 +1,18 @@
 package com.example.demonreproductormusica.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class DB extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "demon.db";
     public static final String TABLE_PLAYLIST = "table_playlist";
     public static final String CURRENT_PLAYLIST = "CURRENT_PLAYLIST";
@@ -83,6 +84,21 @@ public class DB extends SQLiteOpenHelper {
                         PLAYLIST_SONG_COLUMN_ID_SONG + " INTEGER NOT NULL" +
                         ")"
         );
+
+    }
+
+    private void create_playlist_favorits() {
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DB.PLAYLIST_COLUMN_NAME, "Favoritos ❤");
+
+            long id_playlist = sqLiteDatabase.insert(DB.TABLE_PLAYLIST, null, contentValues);
+            Toast.makeText(null, "Playlist Favoritos ❤ creada", Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Log.e("[ERROR_DB]", ex.toString());
+        }
     }
 
     private boolean checkExistDataBase() {
@@ -100,9 +116,10 @@ public class DB extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("DROP TABLE " + TABLE_PLAYLIST_SONG);
-        db.execSQL("DROP TABLE " + TABLE_SONGS);
         db.execSQL("DROP TABLE " + TABLE_PLAYLIST);
+        db.execSQL("DROP TABLE " + CURRENT_PLAYLIST);
+        db.execSQL("DROP TABLE " + TABLE_SONGS);
+        db.execSQL("DROP TABLE " + TABLE_PLAYLIST_SONG);
 
         onCreate(db);
 

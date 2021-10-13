@@ -46,7 +46,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
     RecyclerView recyclerViewItems;
 
     // menu flotante
-    ImageView button_menu;
+    ImageView button_menu, imageView;
     PopupMenu popupMenu;
 
     public void setListItem(ListItem listItem) {
@@ -59,16 +59,23 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
         // menu flotante -> dependiendo del estado podremos abrir diferentes menus
         // https://stackoverflow.com/questions/27895108/nullpointerexception-attempt-to-invoke-virtual-method-boolean-java-lang-string
-        if (this.state_item != null && this.state_item.equals("ITEM_PLAYLIST_LIST"))
+        if (this.state_item != null && this.state_item.equals("ITEM_PLAYLIST_LIST")){
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
+            imageView.setImageResource(R.drawable.ic_baseline_playlist_play);
+        }
         if (this.state_item != null && state_item.equals(ListItem.ITEM_PLAYLIST_VIEW)) {
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_playlist, popupMenu.getMenu());
             init_state_ITEM_PLAYLIST_VIEW();
+            imageView.setImageResource(R.drawable.ic_baseline_playlist_play);
         }
-        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST))
+        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST)){
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
-        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_VIEW))
+            imageView.setImageResource(R.drawable.ic_reproductor);
+        }
+        if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_VIEW)){
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
+            imageView.setImageResource(R.drawable.ic_reproductor);
+        }
 
     }
 
@@ -78,6 +85,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
     private void init(View itemView) {
         // view lista_listItem's attributes
+        imageView = itemView.findViewById(R.id.imageView);
         textview_title = itemView.findViewById(R.id.textview_title);
         textview_subtitle = itemView.findViewById(R.id.textview_subtitle);
 
@@ -118,6 +126,8 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
         // menu flotante // ==================================================================================
         init_meu_float(itemView);
+
+
     }
 
     private void navigate_to_reproductor(View itemView) {

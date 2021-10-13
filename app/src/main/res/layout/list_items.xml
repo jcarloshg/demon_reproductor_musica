@@ -11,10 +11,11 @@
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginTop="16dp"
+        android:background="@color/azul_gris"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_size" />
+        app:srcCompat="@drawable/ic_baseline_playlist_play" />
 
 
     <LinearLayout

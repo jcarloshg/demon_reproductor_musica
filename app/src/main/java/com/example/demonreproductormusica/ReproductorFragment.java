@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
-import com.example.demonreproductormusica.db.DBCurrentPlaylist;
+import com.example.demonreproductormusica.db.*;
 import com.example.demonreproductormusica.db.DBSong;
 
 import com.example.demonreproductormusica.entidades.*;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ReproductorFragment} factory method to
+ * Use the  factory method to
  * create an instance of this fragment.
  */
 public class ReproductorFragment extends Fragment {

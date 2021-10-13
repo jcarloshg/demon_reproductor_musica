@@ -20,8 +20,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.demonreproductormusica.db.DB;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import com.example.demonreproductormusica.db.*;
 
 
 public class MainActivity extends AppCompatActivity {

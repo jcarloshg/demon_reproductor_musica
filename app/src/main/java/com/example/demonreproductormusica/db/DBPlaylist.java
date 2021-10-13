@@ -6,8 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.demonreproductormusica.entidades.*;
+
 import androidx.annotation.Nullable;
-import com.example.demonreproductormusica.entidades.ListItem;
 
 import java.util.ArrayList;
 

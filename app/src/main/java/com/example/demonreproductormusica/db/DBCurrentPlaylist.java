@@ -8,8 +8,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.demonreproductormusica.entidades.ListItem;
-
 import java.util.ArrayList;
 
 public class DBCurrentPlaylist extends DB {
