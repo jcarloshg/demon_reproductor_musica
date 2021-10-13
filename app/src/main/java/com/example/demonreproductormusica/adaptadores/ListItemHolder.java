@@ -1,8 +1,13 @@
 package com.example.demonreproductormusica.adaptadores;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,11 +34,15 @@ import com.example.demonreproductormusica.entidades.*;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.io.FileDescriptor;
 import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
 public class ListItemHolder extends RecyclerView.ViewHolder {
+
+    // view
+    View aux_view;
 
     // properties auxiliary
     String state_item;
@@ -53,6 +62,38 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
 
     public void setListItem(ListItem listItem) {
         this.listItem = listItem;
+        set_img_album();
+    }
+
+
+    private Bitmap getAlbumart(View view, Long album_id) {
+        Bitmap bm = null;
+        try {
+            final Uri sArtworkUri = Uri
+                    .parse("content://media/external/audio/albumart");
+
+            Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
+
+            ParcelFileDescriptor pfd = view.getContext().getContentResolver()
+                    .openFileDescriptor(uri, "r");
+
+            if (pfd != null) {
+                FileDescriptor fd = pfd.getFileDescriptor();
+                bm = BitmapFactory.decodeFileDescriptor(fd);
+            }
+        } catch (Exception e) {
+        }
+        return bm;
+    }
+
+    private void set_img_album() {
+        Bitmap img_album = getAlbumart(aux_view, listItem.getImg_id());
+
+        if (img_album == null) {
+            imageView.setImageResource(R.drawable.ic_reproductor);
+        } else {
+            imageView.setImageBitmap(img_album);
+        }
     }
 
     // dependiendo del estado podremos hacer o no, ciertas acciones
@@ -72,7 +113,6 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         }
         if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_LIST)) {
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
-            imageView.setImageResource(R.drawable.ic_reproductor);
         }
         if (this.state_item != null && state_item.equals(ListItem.ITEM_SONG_VIEW)) {
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_song, popupMenu.getMenu());
@@ -129,7 +169,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         // menu flotante // ==================================================================================
         init_meu_float(itemView);
 
-
+        aux_view = itemView;
     }
 
     private void navigate_to_reproductor(View itemView) {

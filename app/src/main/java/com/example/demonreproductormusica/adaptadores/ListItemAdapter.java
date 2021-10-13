@@ -34,8 +34,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
         holder.textview_title.setText(lista_listItem.get(position).getTitle());
         holder.textview_subtitle.setText(lista_listItem.get(position).getSubtitle());
         // it's variables auxiliary
-        holder.setState_item(lista_listItem.get(position).getTYPE());
         holder.setListItem(lista_listItem.get(position));
+        holder.setState_item(lista_listItem.get(position).getTYPE());;
     }
 
     @Override

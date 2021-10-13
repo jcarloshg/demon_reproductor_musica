@@ -1,12 +1,16 @@
 package com.example.demonreproductormusica;
 
 import android.app.LauncherActivity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +29,7 @@ import com.example.demonreproductormusica.db.DBSong;
 
 import com.example.demonreproductormusica.entidades.*;
 
+import java.io.FileDescriptor;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +53,7 @@ public class ReproductorFragment extends Fragment {
     // VIEW
     TextView tView_name, tView_artist, tview_time_start, tview_time_end;
     ImageView iView_play, iView_next, iView_previous, iView_pause, iView_current_playlist,
-            iView_favorite;
+            iView_favorite, iView_cover_page;
     private SeekBar seekBar;
     MediaPlayer mediaPlayer;
 
@@ -84,6 +89,7 @@ public class ReproductorFragment extends Fragment {
         tview_time_end = view.findViewById(R.id.tview_time_end);
 
         iView_current_playlist = view.findViewById(R.id.iView_current_playlist);
+        iView_cover_page = view.findViewById(R.id.iView_cover_page);
     }
 
     @Override
@@ -300,7 +306,37 @@ public class ReproductorFragment extends Fragment {
         return aux_song;
     }
 
-    private void update_view(View view) {
+    private Bitmap getAlbumart(View view, Long album_id) {
+        Bitmap bm = null;
+        try {
+            final Uri sArtworkUri = Uri
+                    .parse("content://media/external/audio/albumart");
+
+            Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
+
+            ParcelFileDescriptor pfd = view.getContext().getContentResolver()
+                    .openFileDescriptor(uri, "r");
+
+            if (pfd != null) {
+                FileDescriptor fd = pfd.getFileDescriptor();
+                bm = BitmapFactory.decodeFileDescriptor(fd);
+            }
+        } catch (Exception e) {
+        }
+        return bm;
+    }
+
+    private void set_img_album(View view) {
+        Bitmap img_album = getAlbumart(view, song.getImg_id());
+
+        if (img_album == null) {
+            iView_cover_page.setImageResource(R.drawable.ic_reproductor);
+        } else {
+            iView_cover_page.setImageBitmap(img_album);
+        }
+    }
+
+    public void update_view(View view) {
 
         // update name && artist
         tView_name.setText(song.getTitle());
@@ -327,6 +363,7 @@ public class ReproductorFragment extends Fragment {
         seekBar.setProgress((int) startTime);
         myHandler.postDelayed(UpdateSongTime, 100);
 
+        set_img_album(view);
     }
 
     private Runnable UpdateSongTime = new Runnable() {

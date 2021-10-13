@@ -1,6 +1,7 @@
 package com.example.demonreproductormusica.db;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -44,16 +45,25 @@ public class DBSong extends DB {
             int column_title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int column_album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
             int column_artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            int column_album_id = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
             do {
                 int id = cursor.getInt(column_id);
                 String name = cursor.getString(column_title);
                 String album = cursor.getString(column_album);
                 String artist = cursor.getString(column_artist);
+                Long album_id = cursor.getLong(column_album_id);
+                Uri imgs_paths = Uri.parse("content://media/external/audio/albumart");
+                Uri img_path = ContentUris.withAppendedId(imgs_paths, album_id);
+
+                Log.e("[ID_ALMBUM]", "getAllFilesMp3: "+ album_id + " path " + img_path.toString() );
 
                 ListItem listItem = new ListItem();
                 listItem.setId(id);
                 listItem.setTitle(name);
-                listItem.setSubtitle(album + " | " + artist);
+                listItem.setSubtitle(album + " - " + artist);
+                listItem.setImg_id(album_id);
+                listItem.setImg_path(img_path.toString());
+
                 list.add(listItem);
 
             } while (cursor.moveToNext());
@@ -73,7 +83,9 @@ public class DBSong extends DB {
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.ARTIST
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ALBUM_ID,
+
         };
         final String selection_column = MediaStore.Audio.Media._ID + " = ?";
         final String[] selection_agr = new String[]{Integer.toString(id_song)};
@@ -90,11 +102,16 @@ public class DBSong extends DB {
                 String name = cursor_song.getString(1);
                 String album = cursor_song.getString(2);
                 String artist = cursor_song.getString(3);
+                Long album_id = cursor_song.getLong(4);
+                Uri imgs_paths = Uri.parse("content://media/external/audio/albumart");
+                Uri img_path = ContentUris.withAppendedId(imgs_paths, album_id);
 
                 ListItem listItem = new ListItem();
                 listItem.setId(id);
                 listItem.setTitle(name);
                 listItem.setSubtitle(album + " | " + artist);
+                listItem.setImg_id(album_id);
+                listItem.setImg_path(img_path.toString());
                 song = listItem;
 
             } while (cursor_song.moveToNext());
@@ -126,6 +143,7 @@ public class DBSong extends DB {
         return filePath;
     }
 
+
     public ArrayList<ListItem> get_song_by_name(String s) {
 
         ArrayList<ListItem> list = new ArrayList<>();
@@ -138,7 +156,8 @@ public class DBSong extends DB {
                     MediaStore.Audio.Media._ID,
                     MediaStore.Audio.Media.TITLE,
                     MediaStore.Audio.Media.ALBUM,
-                    MediaStore.Audio.Media.ARTIST
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.ALBUM_ID,
             };
             final String selection_column = MediaStore.Audio.Media.TITLE + " LIKE ?";
             final String[] selection_agr = new String[]{"%"+s+"%"};
@@ -155,11 +174,16 @@ public class DBSong extends DB {
                     String name = cursor_song.getString(1);
                     String album = cursor_song.getString(2);
                     String artist = cursor_song.getString(3);
+                    Long album_id = cursor_song.getLong(4);
+                    Uri imgs_paths = Uri.parse("content://media/external/audio/albumart");
+                    Uri img_path = ContentUris.withAppendedId(imgs_paths, album_id);
 
                     ListItem listItem = new ListItem();
                     listItem.setId(id);
                     listItem.setTitle(name);
                     listItem.setSubtitle(album + " | " + artist);
+                    listItem.setImg_id(album_id);
+                    listItem.setImg_path(img_path.toString());
                     ListItem song = listItem;
 
                     list.add(song);
@@ -185,7 +209,8 @@ public class DBSong extends DB {
                     MediaStore.Audio.Media._ID,
                     MediaStore.Audio.Media.TITLE,
                     MediaStore.Audio.Media.ALBUM,
-                    MediaStore.Audio.Media.ARTIST
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.ALBUM_ID,
             };
             final String selection_column = MediaStore.Audio.Media.ALBUM + " LIKE ?";
             final String[] selection_agr = new String[]{"%%"};
@@ -207,11 +232,16 @@ public class DBSong extends DB {
                     String name = cursor_song.getString(1);
                     String album = cursor_song.getString(2);
                     String artist = cursor_song.getString(3);
+                    Long album_id = cursor_song.getLong(4);
+                    Uri imgs_paths = Uri.parse("content://media/external/audio/albumart");
+                    Uri img_path = ContentUris.withAppendedId(imgs_paths, album_id);
 
                     ListItem listItem = new ListItem();
                     listItem.setId(id);
                     listItem.setTitle(name);
                     listItem.setSubtitle(album + " | " + artist);
+                    listItem.setImg_id(album_id);
+                    listItem.setImg_path(img_path.toString());
                     ListItem song = listItem;
 
                     list.add(song);
@@ -237,7 +267,8 @@ public class DBSong extends DB {
                     MediaStore.Audio.Media._ID,
                     MediaStore.Audio.Media.TITLE,
                     MediaStore.Audio.Media.ALBUM,
-                    MediaStore.Audio.Media.ARTIST
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.ALBUM_ID,
             };
             final String selection_column = MediaStore.Audio.Media.ALBUM + " LIKE ?";
             final String[] selection_agr = new String[]{"%"+s+"%"};
@@ -259,11 +290,16 @@ public class DBSong extends DB {
                     String name = cursor_song.getString(1);
                     String album = cursor_song.getString(2);
                     String artist = cursor_song.getString(3);
+                    Long album_id = cursor_song.getLong(4);
+                    Uri imgs_paths = Uri.parse("content://media/external/audio/albumart");
+                    Uri img_path = ContentUris.withAppendedId(imgs_paths, album_id);
 
                     ListItem listItem = new ListItem();
                     listItem.setId(id);
                     listItem.setTitle(name);
                     listItem.setSubtitle(album + " | " + artist);
+                    listItem.setImg_id(album_id);
+                    listItem.setImg_path(img_path.toString());
                     ListItem song = listItem;
 
                     list.add(song);
@@ -288,7 +324,8 @@ public class DBSong extends DB {
                     MediaStore.Audio.Media._ID,
                     MediaStore.Audio.Media.TITLE,
                     MediaStore.Audio.Media.ALBUM,
-                    MediaStore.Audio.Media.ARTIST
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.ALBUM_ID,
             };
             final String selection_column = MediaStore.Audio.Media.ARTIST + " LIKE ?";
             final String[] selection_agr = new String[]{"%%"};
@@ -310,11 +347,16 @@ public class DBSong extends DB {
                     String name = cursor_song.getString(1);
                     String album = cursor_song.getString(2);
                     String artist = cursor_song.getString(3);
+                    Long album_id = cursor_song.getLong(4);
+                    Uri imgs_paths = Uri.parse("content://media/external/audio/albumart");
+                    Uri img_path = ContentUris.withAppendedId(imgs_paths, album_id);
 
                     ListItem listItem = new ListItem();
                     listItem.setId(id);
                     listItem.setTitle(name);
                     listItem.setSubtitle(album + " | " + artist);
+                    listItem.setImg_id(album_id);
+                    listItem.setImg_path(img_path.toString());
                     ListItem song = listItem;
 
                     list.add(song);
@@ -340,7 +382,8 @@ public class DBSong extends DB {
                     MediaStore.Audio.Media._ID,
                     MediaStore.Audio.Media.TITLE,
                     MediaStore.Audio.Media.ALBUM,
-                    MediaStore.Audio.Media.ARTIST
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.ALBUM_ID,
             };
             final String selection_column = MediaStore.Audio.Media.ARTIST + " LIKE ?";
             final String[] selection_agr = new String[]{"%"+s+"%"};
@@ -362,11 +405,16 @@ public class DBSong extends DB {
                     String name = cursor_song.getString(1);
                     String album = cursor_song.getString(2);
                     String artist = cursor_song.getString(3);
+                    Long album_id = cursor_song.getLong(4);
+                    Uri imgs_paths = Uri.parse("content://media/external/audio/albumart");
+                    Uri img_path = ContentUris.withAppendedId(imgs_paths, album_id);
 
                     ListItem listItem = new ListItem();
                     listItem.setId(id);
                     listItem.setTitle(name);
                     listItem.setSubtitle(album + " | " + artist);
+                    listItem.setImg_id(album_id);
+                    listItem.setImg_path(img_path.toString());
                     ListItem song = listItem;
 
                     list.add(song);

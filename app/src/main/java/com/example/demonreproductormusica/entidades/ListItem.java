@@ -10,6 +10,8 @@ public class ListItem {
     private int id;
     private String title;
     private String subtitle;
+    private String img_path;
+    private long img_id;
 
     /*
     - el id_auxiliary sirve para cuando queremos hacer una accion que requiera dos id.
@@ -76,5 +78,21 @@ public class ListItem {
 
     public void setTYPE(final String type) {
         this.TYPE = type;
+    }
+
+    public String getImg_path() {
+        return img_path;
+    }
+
+    public void setImg_path(String img_path) {
+        this.img_path = img_path;
+    }
+
+    public long getImg_id() {
+        return img_id;
+    }
+
+    public void setImg_id(long img_id) {
+        this.img_id = img_id;
     }
 }
