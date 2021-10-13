@@ -21,5 +21,11 @@
     <!-- bottom sheet playlists -->
     <string name="add_to_list_label">Agregar a lista</string>
 
+    <!-- bottom sheet playlists -->
+    <string name="title_configuraciones">Configuraciones</string>
+    <string name="develop_by">developed by </string>
+    <string name="name_developer">Jose Carlos Huerta Garcia</string>
+    <string name="instagram">developer Instagram</string>
+
 
 </resources>
