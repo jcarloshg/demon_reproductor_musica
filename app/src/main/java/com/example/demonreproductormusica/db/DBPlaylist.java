@@ -38,7 +38,7 @@ public class DBPlaylist extends DB {
         return id_playlist;
     }
 
-    public ArrayList<ListItem> get_playlist_for_name(String name_list){
+    public ArrayList<ListItem> get_playlist_for_name(String name_list) {
         DB db = new DB(this.context);
         SQLiteDatabase sqLiteDatabase = db.getReadableDatabase();
 
@@ -53,16 +53,16 @@ public class DBPlaylist extends DB {
                         " WHERE " + DB.PLAYLIST_COLUMN_NAME + " LIKE '%" + name_list + "%';"
                 , null);
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 ListItem listItem = new ListItem();
                 listItem.setId(cursor.getInt(0));
                 listItem.setTitle(cursor.getString(1));
                 listItem.setSubtitle(null);
                 list.add(listItem);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
-        
+
         return list;
     }
 
@@ -108,4 +108,25 @@ public class DBPlaylist extends DB {
         return playlist;
     }
 
+    public int get_id_playlist_by_name(String name) {
+        int id_playlist = -1;
+        try {
+            DB db = new DB(this.context);
+            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+
+            Cursor cursor = sqLiteDatabase.rawQuery(
+                    "SELECT * " +
+                            " FROM " + DB.TABLE_PLAYLIST +
+                            " WHERE " + DB.PLAYLIST_COLUMN_NAME + "= '" + name + "'",
+                    null);
+
+            if (cursor.moveToFirst()) {
+                id_playlist = cursor.getInt(0);
+            }
+        } catch (Exception ex) {
+            Log.e("[get_id_playlist_by_name]", ex.toString());
+        }
+
+        return id_playlist;
+    }
 }

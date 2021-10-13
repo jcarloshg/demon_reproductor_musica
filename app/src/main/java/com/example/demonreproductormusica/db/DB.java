@@ -38,6 +38,9 @@ public class DB extends SQLiteOpenHelper {
     public static final String PLAYLIST_SONG_COLUMN_ID_PLAYLIST = "id_playlist";
     public static final String PLAYLIST_SONG_COLUMN_ID_SONG = "id_song";
 
+    //table favorites
+    public static final String TABLE_NAME_FAVORITES = "Favoritos ❤";
+
     // check exist dataBase
     private static String DATABASE_PATH;
 
@@ -85,6 +88,8 @@ public class DB extends SQLiteOpenHelper {
                         ")"
         );
 
+        create_playlist_favorits();
+
     }
 
     private void create_playlist_favorits() {
@@ -92,7 +97,7 @@ public class DB extends SQLiteOpenHelper {
             SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put(DB.PLAYLIST_COLUMN_NAME, "Favoritos ❤");
+            contentValues.put(DB.PLAYLIST_COLUMN_NAME, DB.TABLE_NAME_FAVORITES);
 
             long id_playlist = sqLiteDatabase.insert(DB.TABLE_PLAYLIST, null, contentValues);
             Toast.makeText(null, "Playlist Favoritos ❤ creada", Toast.LENGTH_LONG).show();

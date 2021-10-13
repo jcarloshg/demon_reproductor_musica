@@ -95,7 +95,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/iView_favorit"
+        android:id="@+id/iView_favorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -116,7 +116,7 @@
         android:layout_marginBottom="32dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
-        app:layout_constraintEnd_toStartOf="@+id/iView_favorit"
+        app:layout_constraintEnd_toStartOf="@+id/iView_favorite"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent">
 

@@ -46,7 +46,8 @@ public class ReproductorFragment extends Fragment {
 
     // VIEW
     TextView tView_name, tView_artist, tview_time_start, tview_time_end;
-    ImageView iView_play, iView_next, iView_previous, iView_pause, iView_current_playlist;
+    ImageView iView_play, iView_next, iView_previous, iView_pause, iView_current_playlist,
+            iView_favorite;
     private SeekBar seekBar;
     MediaPlayer mediaPlayer;
 
@@ -68,6 +69,7 @@ public class ReproductorFragment extends Fragment {
     private void init_components(View view) {
         tView_name = view.findViewById(R.id.tView_name);
         tView_artist = view.findViewById(R.id.tView_artist);
+        iView_favorite = view.findViewById(R.id.iView_favorite);
 
         seekBar = view.findViewById(R.id.seekBar);
         seekBar.setClickable(false);
@@ -103,9 +105,25 @@ public class ReproductorFragment extends Fragment {
         init_control_netxt(view);
         init_control_previous(view);
 
+        check_song_is_on_favorites(view);
+
         init_iView_current_playlist_setOnClick();
 
         return view;
+    }
+
+    private void check_song_is_on_favorites(View view) {
+        DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
+        int id_playlist_favorite = dbPlaylist.get_id_playlist_by_name(DB.TABLE_NAME_FAVORITES);
+
+        DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(view.getContext());
+        boolean exist_song_on_favorites = dbPlaylistSong.check_exist_song_on_playlist(song.getId(), id_playlist_favorite);
+
+        int id_resource_favorite = (exist_song_on_favorites)
+                ? R.drawable.ic_favorite
+                : R.drawable.ic_no_favorite;
+        
+        iView_favorite.setImageResource(id_resource_favorite);
     }
 
     private void init_iView_current_playlist_setOnClick() {

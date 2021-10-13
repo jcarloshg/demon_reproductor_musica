@@ -112,4 +112,30 @@ public class DBPlaylistSong extends DB {
         }
     }
 
+    public boolean check_exist_song_on_playlist(int id_song, int id_playlist){
+        boolean exist_song = false;
+
+        DB db = new DB(this.context);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+
+        try {
+            Cursor cursor_TABLE_PLAYLIST_SONG = sqLiteDatabase.rawQuery(
+                    "SELECT *" +
+                            " FROM " + DB.TABLE_PLAYLIST_SONG +
+                            " WHERE " + DB.PLAYLIST_SONG_COLUMN_ID_PLAYLIST + " = " + Integer.toString(id_playlist),
+                    null);
+
+            if (cursor_TABLE_PLAYLIST_SONG.moveToFirst()) {
+                do {
+                    int id_song_table = cursor_TABLE_PLAYLIST_SONG.getInt(1);
+                    exist_song = (id_song_table == id_song) ? true : false;
+                } while (cursor_TABLE_PLAYLIST_SONG.moveToNext());
+            }
+        }catch (Exception ex) {
+            Log.e("[check_exist_song_on_playlist] ", ex.toString());
+        }
+
+        return exist_song;
+    }
+
 }
