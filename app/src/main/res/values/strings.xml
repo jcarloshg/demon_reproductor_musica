@@ -27,6 +27,7 @@
     <string name="name_developer">Jose Carlos Huerta Garcia</string>
     <string name="instagram">developer Instagram</string>
     <string name="delete_data">Borrar datos</string>
+    <string name="delete_data_describe">Unicamente las playlist serán borradas</string>
 
 
 </resources>
