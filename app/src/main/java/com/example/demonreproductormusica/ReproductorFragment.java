@@ -138,11 +138,11 @@ public class ReproductorFragment extends Fragment {
         DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(v.getContext());
         long id_insert = dbPlaylistSong.insert_song_to_playlist(id_playlist_favorite, id);
 
-        String msg = (id_insert > -1 )
+        String msg = (id_insert > -1)
                 ? song.getTitle() + " agregda a favoritos"
                 : song.getTitle() + " no se pudo agregar a favoritos";
 
-        Toast.makeText(v.getContext(), ""+ msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(v.getContext(), "" + msg, Toast.LENGTH_LONG).show();
     }
 
     private void remove_to_favorite(View v, int id) {
@@ -150,13 +150,13 @@ public class ReproductorFragment extends Fragment {
         int id_playlist_favorite = dbPlaylist.get_id_playlist_by_name(DB.TABLE_NAME_FAVORITES);
 
         DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(v.getContext());
-       boolean is_remove_song = dbPlaylistSong.remove_song_from_playlist(id_playlist_favorite, id);
+        boolean is_remove_song = dbPlaylistSong.remove_song_from_playlist(id_playlist_favorite, id);
 
         String msg = (is_remove_song)
-                ? song.getTitle() + " se quitar de favoritos"
+                ? song.getTitle() + " eliminada de favoritos"
                 : song.getTitle() + " no se pudo quitar de favoritos";
 
-        Toast.makeText(v.getContext(), ""+ msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(v.getContext(), "" + msg, Toast.LENGTH_LONG).show();
     }
 
     private boolean is_on_favorites(View view, int id_song) {

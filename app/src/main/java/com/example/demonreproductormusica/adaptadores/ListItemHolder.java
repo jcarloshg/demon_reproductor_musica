@@ -186,12 +186,15 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.popup_playlist_delete:
+                        delete_playlist(itemView, listItem.getId());
                         Log.d("[popupMenu]", "popup_playlist_delete" + item);
                         break;
                     case R.id.popup_song_add:
                         show_bottomSheet_to_add_song(itemView);
                         break;
                     case R.id.popup_song_delete:
+                        // pasamos (vista, id_song, id_playlist) respectivamente
+                        delete_song_from_platlist(itemView, listItem.getId_auxiliary(), listItem.getId());
                         Log.d("[popupMenu]", "popup_song_delete" + item);
                         break;
                 }
@@ -204,6 +207,29 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
                 popupMenu.show();
             }
         });
+    }
+
+    private void delete_playlist(View itemView, int id_playlist) {
+        DBPlaylist dbPlaylist = new DBPlaylist(itemView.getContext());
+        boolean is_remove_playlist = dbPlaylist.delete_playlist(id_playlist);
+
+        String msg = (is_remove_playlist)
+                ? listItem.getTitle() + " playlist eliminada"
+                : listItem.getTitle() + " no se pudo eliminar playlist";
+
+        Toast.makeText(itemView.getContext(), "" + msg, Toast.LENGTH_LONG).show();
+    }
+
+    private void delete_song_from_platlist(View itemView, int id_platlist, int id_song) {
+        DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(itemView.getContext());
+        boolean is_remove_song =
+                dbPlaylistSong.remove_song_from_playlist(id_platlist, id_song);
+
+        String msg = (is_remove_song)
+                ? listItem.getTitle() + " eliminada de playlist"
+                : listItem.getTitle() + " no se pudo quitar de playlist";
+
+        Toast.makeText(itemView.getContext(), "" + msg, Toast.LENGTH_LONG).show();
     }
 
     private void show_bottomSheet_to_add_song(final View itemView) {

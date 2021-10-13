@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.demonreproductormusica.db.DB;
 
@@ -63,7 +64,6 @@ public class ConfiguracionFragment extends Fragment {
         tView_delete_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-
                 AlertDialog.Builder alertb = new AlertDialog.Builder(v.getContext());
                 alertb.setTitle("Borrar información");
                 alertb.setMessage("Unicamente las playlist serán borradas, archivos de audio se conservan en el dispositivo");
@@ -71,6 +71,7 @@ public class ConfiguracionFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         drop_data_of_DB(v);
+                        Toast.makeText(v.getContext(), "Datos borrados correctamente.", Toast.LENGTH_LONG).show();
                     }
                 });
                 alertb.setNegativeButton("Cancelar", null);

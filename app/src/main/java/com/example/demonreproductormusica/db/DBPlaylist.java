@@ -129,4 +129,21 @@ public class DBPlaylist extends DB {
 
         return id_playlist;
     }
+
+    public boolean delete_playlist(int id_playlist){
+        boolean is_remove = false;
+
+        DB db = new DB(this.context);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+
+        try {
+            String whereClause = DB.PLAYLIST_COLUMN_ID + " = ?";
+            String[] whereArgs = new String[] { String.valueOf(id_playlist) };
+            sqLiteDatabase.delete(DB.TABLE_PLAYLIST, whereClause, whereArgs);
+            is_remove = true;
+        } catch (Exception ex) {
+            Log.e("[remove_row]", ex.toString());
+        }
+        return is_remove;
+    }
 }
