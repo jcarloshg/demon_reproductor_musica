@@ -37,6 +37,7 @@ public class DB extends SQLiteOpenHelper {
     // COLUMN NAME <TABLE_PLAYLIST_SONG>
     public static final String PLAYLIST_SONG_COLUMN_ID_PLAYLIST = "id_playlist";
     public static final String PLAYLIST_SONG_COLUMN_ID_SONG = "id_song";
+    public static final String PLAYLIST_SONG_ID = "id_song_playlist";
 
     //table favorites
     public static final String TABLE_NAME_FAVORITES = "Favoritos ❤";
@@ -84,7 +85,8 @@ public class DB extends SQLiteOpenHelper {
                 "CREATE TABLE " + TABLE_PLAYLIST_SONG +
                         "(" +
                         PLAYLIST_SONG_COLUMN_ID_PLAYLIST + " INTEGER NOT NULL," +
-                        PLAYLIST_SONG_COLUMN_ID_SONG + " INTEGER NOT NULL" +
+                        PLAYLIST_SONG_COLUMN_ID_SONG + " INTEGER NOT NULL," +
+                        PLAYLIST_SONG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT" +
                         ")"
         );
 

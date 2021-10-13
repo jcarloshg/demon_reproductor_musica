@@ -61,7 +61,7 @@ public class DBPlaylistSong extends DB {
         return playlist;
     }
 
-    public ArrayList<Integer> get_id_songs_of_playlist(int id_playlist){
+    public ArrayList<Integer> get_id_songs_of_playlist(int id_playlist) {
 
         DB db = new DB(this.context);
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
@@ -80,7 +80,7 @@ public class DBPlaylistSong extends DB {
                     id_song_playlist.add(id_song);
                 } while (cursor_TABLE_PLAYLIST_SONG.moveToNext());
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Log.e("[get_uri_songs_of_playlist DBPlaylistSong] ", ex.toString());
         }
 
@@ -112,7 +112,7 @@ public class DBPlaylistSong extends DB {
         }
     }
 
-    public boolean check_exist_song_on_playlist(int id_song, int id_playlist){
+    public boolean check_exist_song_on_playlist(int id_song, int id_playlist) {
         boolean exist_song = false;
 
         DB db = new DB(this.context);
@@ -131,11 +131,51 @@ public class DBPlaylistSong extends DB {
                     exist_song = (id_song_table == id_song) ? true : false;
                 } while (cursor_TABLE_PLAYLIST_SONG.moveToNext());
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Log.e("[check_exist_song_on_playlist] ", ex.toString());
         }
 
         return exist_song;
     }
 
+    public boolean remove_row(int id){
+        boolean is_remove = false;
+
+        DB db = new DB(this.context);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+
+        try {
+            String whereClause = DB.PLAYLIST_SONG_ID + " = ?";
+            String[] whereArgs = new String[] { String.valueOf(id) };
+            sqLiteDatabase.delete(DB.TABLE_PLAYLIST_SONG, whereClause, whereArgs);
+            is_remove = true;
+        } catch (Exception ex) {
+            Log.e("[remove_row]", ex.toString());
+        }
+        return is_remove;
+    }
+
+    public boolean remove_song_from_playlist(int id_playlist_favorite, int id) {
+        boolean remove = true;
+
+        DB db = new DB(this.context);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+
+        try {
+
+            Cursor cursor_TABLE_PLAYLIST_SONG = sqLiteDatabase.rawQuery(
+                    "SELECT * " +
+                            " FROM " + DB.TABLE_PLAYLIST_SONG + " " +
+                            " WHERE " + DB.PLAYLIST_SONG_COLUMN_ID_PLAYLIST + " = " + Integer.toString(id_playlist_favorite) +
+                            " AND " + DB.PLAYLIST_SONG_COLUMN_ID_SONG + " = " + Integer.toString(id),
+                    null);
+
+            if (cursor_TABLE_PLAYLIST_SONG.moveToFirst()){
+                remove = remove_row(cursor_TABLE_PLAYLIST_SONG.getInt(2));
+            }
+        } catch (Exception ex) {
+            Log.e("[remove_song_from_playlist]", ex.toString());
+        }
+        return remove;
+    }
 }

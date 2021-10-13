@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
@@ -109,20 +110,72 @@ public class ReproductorFragment extends Fragment {
 
         init_iView_current_playlist_setOnClick();
 
+        init_addRemove_from_favorits();
+
         return view;
     }
 
-    private void check_song_is_on_favorites(View view) {
+    private void init_addRemove_from_favorits() {
+        iView_favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean exist_song_on_favorites = is_on_favorites(v, song.getId());
+
+                if (exist_song_on_favorites)
+                    remove_to_favorite(v, song.getId());
+                else
+                    add_to_favorites(v, song.getId());
+
+                check_song_is_on_favorites(v);
+            }
+        });
+    }
+
+    private void add_to_favorites(View v, int id) {
+        DBPlaylist dbPlaylist = new DBPlaylist(v.getContext());
+        int id_playlist_favorite = dbPlaylist.get_id_playlist_by_name(DB.TABLE_NAME_FAVORITES);
+
+        DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(v.getContext());
+        long id_insert = dbPlaylistSong.insert_song_to_playlist(id_playlist_favorite, id);
+
+        String msg = (id_insert > -1 )
+                ? song.getTitle() + " agregda a favoritos"
+                : song.getTitle() + " no se pudo agregar a favoritos";
+
+        Toast.makeText(v.getContext(), ""+ msg, Toast.LENGTH_LONG).show();
+    }
+
+    private void remove_to_favorite(View v, int id) {
+        DBPlaylist dbPlaylist = new DBPlaylist(v.getContext());
+        int id_playlist_favorite = dbPlaylist.get_id_playlist_by_name(DB.TABLE_NAME_FAVORITES);
+
+        DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(v.getContext());
+       boolean is_remove_song = dbPlaylistSong.remove_song_from_playlist(id_playlist_favorite, id);
+
+        String msg = (is_remove_song)
+                ? song.getTitle() + " se quitar de favoritos"
+                : song.getTitle() + " no se pudo quitar de favoritos";
+
+        Toast.makeText(v.getContext(), ""+ msg, Toast.LENGTH_LONG).show();
+    }
+
+    private boolean is_on_favorites(View view, int id_song) {
         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext());
         int id_playlist_favorite = dbPlaylist.get_id_playlist_by_name(DB.TABLE_NAME_FAVORITES);
 
         DBPlaylistSong dbPlaylistSong = new DBPlaylistSong(view.getContext());
-        boolean exist_song_on_favorites = dbPlaylistSong.check_exist_song_on_playlist(song.getId(), id_playlist_favorite);
+        boolean exist_song_on_favorites = dbPlaylistSong.check_exist_song_on_playlist(id_song, id_playlist_favorite);
+        return exist_song_on_favorites;
+    }
+
+    private void check_song_is_on_favorites(View view) {
+
+        boolean exist_song_on_favorites = is_on_favorites(view, song.getId());
 
         int id_resource_favorite = (exist_song_on_favorites)
                 ? R.drawable.ic_favorite
                 : R.drawable.ic_no_favorite;
-        
+
         iView_favorite.setImageResource(id_resource_favorite);
     }
 
