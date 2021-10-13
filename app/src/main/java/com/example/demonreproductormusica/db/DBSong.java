@@ -5,11 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.demonreproductormusica.entidades.ListItem;
+
+import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class DBSong extends DB {
     Context context;
@@ -17,6 +22,47 @@ public class DBSong extends DB {
     public DBSong(@Nullable Context context) {
         super(context);
         this.context = context;
+    }
+
+    public ArrayList<ListItem> getAllFilesMp3() {
+
+        ArrayList<ListItem> list = new ArrayList<>();
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Cursor cursor = contentResolver.query(uri, null, null, null, null);
+
+        if (cursor == null) {
+            Toast.makeText(null, "algo salio mal :(", Toast.LENGTH_SHORT).show();
+        } else if (!cursor.moveToFirst()) {
+            Toast.makeText(null, "no hay musica", Toast.LENGTH_SHORT).show();
+        } else {
+
+            int column_id = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
+            int column_title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            int column_album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
+            int column_artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            do {
+                int id = cursor.getInt(column_id);
+                String name = cursor.getString(column_title);
+                String album = cursor.getString(column_album);
+                String artist = cursor.getString(column_artist);
+
+                ListItem listItem = new ListItem();
+                listItem.setId(id);
+                listItem.setTitle(name);
+                listItem.setSubtitle(album + " | " + artist);
+                list.add(listItem);
+
+            } while (cursor.moveToNext());
+        }
+
+        for (ListItem item : list) {
+            item.setTYPE(ListItem.ITEM_SONG_LIST);
+            Log.i("[SONG]", "getAllFilesMp3: " + item.getTitle() + " id: " + item.getId());
+        }
+
+        return list;
     }
 
     public ListItem get_song_by_id(int id_song) {
@@ -81,5 +127,61 @@ public class DBSong extends DB {
         }
 
         return filePath;
+    }
+
+    public ArrayList<ListItem> get_song_by_name(String s) {
+
+        ArrayList<ListItem> list = new ArrayList<>();
+
+        try {
+            ContentResolver contentResolver = context.getContentResolver();
+            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+            final String[] column_projection = new String[]{
+                    MediaStore.Audio.Media._ID,
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.ALBUM,
+                    MediaStore.Audio.Media.ARTIST
+            };
+            final String selection_column = MediaStore.Audio.Media.TITLE + " LIKE ?";
+            final String[] selection_agr = new String[]{"%"+s+"%"};
+
+            Cursor cursor_song = contentResolver.query(uri, column_projection, selection_column, selection_agr, null);
+
+            if (cursor_song == null) {
+                Toast.makeText(context, "algo salio mal :(", Toast.LENGTH_SHORT).show();
+            } else if (!cursor_song.moveToFirst()) {
+                Toast.makeText(context, "no hay musica", Toast.LENGTH_SHORT).show();
+            } else {
+                do {
+                    int id = cursor_song.getInt(0);
+                    String name = cursor_song.getString(1);
+                    String album = cursor_song.getString(2);
+                    String artist = cursor_song.getString(3);
+
+
+                    Log.i("[SONG]", "getAllFilesMp3: " + name + " id: " + id);
+
+                    ListItem listItem = new ListItem();
+                    listItem.setId(id);
+                    listItem.setTitle(name);
+                    listItem.setSubtitle(album + " | " + artist);
+                    ListItem song = listItem;
+
+                    list.add(song);
+
+                } while (cursor_song.moveToNext());
+            }
+        }catch (Exception ex) {
+            Log.e("[get_song_by_name]", ex.toString());
+        }
+
+        Log.e("[ASDFASDFASDFASDFASDF]", "getAllFilesMp3: ");
+        for (ListItem item : list) {
+            item.setTYPE(ListItem.ITEM_SONG_LIST);
+            Log.i("[SONG]", "getAllFilesMp3: " + item.getTitle() + " id: " + item.getId());
+        }
+
+        return list;
     }
 }

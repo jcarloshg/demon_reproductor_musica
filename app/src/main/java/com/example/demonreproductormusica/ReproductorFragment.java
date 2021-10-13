@@ -52,41 +52,17 @@ public class ReproductorFragment extends Fragment {
 
     private Handler myHandler = new Handler();
 
-    boolean is_play_song = false;
-
     public static int oneTimeOnly = 0;
     private double startTime = 0;
     private double finalTime = 0;
-    private int forwardTime = 5000;
-    private int backwardTime = 5000;
-    private TextView tx1, tx2, tx3;
 
     public ReproductorFragment() {
         // Required empty public constructor
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        Log.i("[ReproductorFragment]", "onResume: " + "dfkjshdfkjlhsdfkjdlkfsdjkfhk");
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.e("{onDestroy}", "onDestroy: " + "dfslkdfjsdsñlldfjsdjflsdfjñlfjldjfñldjflñdjñldkfjsñldfkj");
-        if (mediaPlayer != null) {
-            myHandler.removeCallbacks(UpdateSongTime);
-            mediaPlayer.release();
-
-        }
     }
 
     private void init_components(View view) {

@@ -5,24 +5,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.demonreproductormusica.adaptadores.*;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.demonreproductormusica.db.*;
 import com.example.demonreproductormusica.entidades.*;
+import com.example.demonreproductormusica.adaptadores.ListItemAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -47,10 +47,17 @@ public class BiblotecaFragment extends Fragment {
     BottomSheetDialog bottomSheetDialog;
     EditText editText_name;
     SearchView searchView;
-    Button get_songs;
+    Button get_songs, button_playlist;
 
     // elements of view Library
     RecyclerView recyclerViewItems;
+
+    // to search
+    public static final String SONG = "SONG";
+    public static final String PLAYLIST = "PLAYLIST";
+    public static final String ALBUM = "ALBUM";
+    public static final String ARTIST = "ARTIST";
+    String search_by = PLAYLIST;
 
     @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,17 +83,19 @@ public class BiblotecaFragment extends Fragment {
         // ===================================================================================
         // create searchView and listener searchView
         searchView = view.findViewById(R.id.search__playlist);
+        searchView.onActionViewExpanded();
+        searchView.setIconified(true);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                ListItemAdapter listItemAdapter = search_playlists(view, s);
+                ListItemAdapter listItemAdapter = search(view, s);
                 recyclerViewItems.setAdapter(listItemAdapter);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                ListItemAdapter listItemAdapter = search_playlists(view, s);
+                ListItemAdapter listItemAdapter = search(view, s);
                 recyclerViewItems.setAdapter(listItemAdapter);
                 return false;
             }
@@ -108,7 +117,20 @@ public class BiblotecaFragment extends Fragment {
         get_songs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ListItemAdapter listItemAdapter = getAllFilesMp3();
+                search_by = SONG;
+                searchView.setQueryHint("Buscar canciones");
+                ListItemAdapter listItemAdapter = search_song(v, "");
+                recyclerViewItems.setAdapter(listItemAdapter);
+            }
+        });
+
+        button_playlist = view.findViewById(R.id.button_playlist);
+        button_playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search_by = PLAYLIST;
+                searchView.setQueryHint("Buscar playlist");
+                ListItemAdapter listItemAdapter = search_playlists(v, "");
                 recyclerViewItems.setAdapter(listItemAdapter);
             }
         });
@@ -116,8 +138,27 @@ public class BiblotecaFragment extends Fragment {
         return view;
     }
 
-    private ListItemAdapter search_playlists(View view, String s) {
+    private ListItemAdapter search(View view, String s){
+        ListItemAdapter listItemAdapter = null;
+        if (search_by.equals(SONG)){
+            listItemAdapter = search_song(view, s);
+        }
+        if (search_by.equals(PLAYLIST)){
+            listItemAdapter = search_playlists(view, s);
+        }
 
+        return listItemAdapter;
+    }
+
+    private ListItemAdapter search_song(View view, String s) {
+        DBSong dbSong = new DBSong(view.getContext());
+        ArrayList<ListItem> songs = s.equals("")
+                ? dbSong.getAllFilesMp3()
+                : dbSong.get_song_by_name(s);
+        return new ListItemAdapter(songs);
+    }
+
+    private ListItemAdapter search_playlists(View view, String s) {
         DBPlaylist dbPlaylist = new DBPlaylist(view.getContext()); //creamos el objeto de la consulta
         ArrayList<ListItem> arrayList = s.equals("")
                 ? dbPlaylist.get_all_laylist() // ejecutamos query y btenemos resultado
@@ -125,6 +166,7 @@ public class BiblotecaFragment extends Fragment {
 
         return new ListItemAdapter(arrayList);
     }
+
 
     private void show_bottom_sheet_create_list(View view) {
         bottomSheetDialog = new BottomSheetDialog(view.getContext());
@@ -154,45 +196,5 @@ public class BiblotecaFragment extends Fragment {
         bottomSheetDialog.show();
     }
 
-    public ListItemAdapter getAllFilesMp3() {
-
-        ArrayList<ListItem> list = new ArrayList<>();
-
-        contentResolver = context.getContentResolver();
-        uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        cursor = contentResolver.query(uri, null, null, null, null);
-
-        if (cursor == null) {
-            Toast.makeText(null, "algo salio mal :(", Toast.LENGTH_SHORT).show();
-        } else if (!cursor.moveToFirst()) {
-            Toast.makeText(null, "no hay musica", Toast.LENGTH_SHORT).show();
-        } else {
-
-            int column_id = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
-            int column_title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int column_album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
-            int column_artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-        do {
-            int id = cursor.getInt(column_id);
-            String name = cursor.getString(column_title);
-            String album = cursor.getString(column_album);
-            String artist = cursor.getString(column_artist);
-
-            ListItem listItem = new ListItem();
-            listItem.setId(id);
-            listItem.setTitle(name);
-            listItem.setSubtitle(album + " | " + artist);
-            list.add(listItem);
-
-        } while (cursor.moveToNext());
-    }
-
-        for (ListItem item : list) {
-            item.setTYPE(ListItem.ITEM_SONG_LIST);
-            Log.i("[SONG]", "getAllFilesMp3: " + item.getTitle() + " id: " + item.getId());
-        }
-
-        return new ListItemAdapter(list);
-    }
 
 }
