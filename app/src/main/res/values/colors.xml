@@ -7,11 +7,10 @@
     <color name="azul_marino">#170973</color>
     <color name="azul_fuerte">#110a40</color>
     <color name="azul_gris">#4f698C</color>
-    <color name="naranja">#D96b2b</color>
+    <color name="naranja">#D86A2A</color>
     <color name="rojo">#bf2e21</color>
 
     <color name="white">#ffffff</color>
-
     <color name="background">#424242</color>
 
 </resources>

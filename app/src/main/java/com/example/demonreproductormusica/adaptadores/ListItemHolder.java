@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -45,7 +46,7 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
     RecyclerView recyclerViewItems;
 
     // menu flotante
-    Button button_menu;
+    ImageView button_menu;
     PopupMenu popupMenu;
 
     public void setListItem(ListItem listItem) {
